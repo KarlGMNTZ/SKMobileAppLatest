@@ -13,6 +13,7 @@ Future addHelpdesk(imageUrl, description, fileUrl) async {
     'dateTime': DateTime.now(),
     'id': docUser.id,
     'userId': FirebaseAuth.instance.currentUser!.uid,
+    'action': false,
   };
 
   await docUser.set(json);

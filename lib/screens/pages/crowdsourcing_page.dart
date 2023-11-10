@@ -271,7 +271,7 @@ class _CroudsourcingPageState extends State<CroudsourcingPage> {
   }
 
   final commentController = TextEditingController();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
