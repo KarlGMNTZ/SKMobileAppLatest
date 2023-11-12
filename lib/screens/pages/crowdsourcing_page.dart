@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -275,9 +273,9 @@ class _CroudsourcingPageState extends State<CroudsourcingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(241, 241, 182, 152),
+      backgroundColor: const Color.fromARGB(241, 241, 182, 152),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color.fromARGB(241, 241, 182, 152),
+        backgroundColor: const Color.fromARGB(241, 241, 182, 152),
         child: const Icon(Icons.add),
         onPressed: () {
           addCrowdsourcingDialog(context);
@@ -348,7 +346,7 @@ class _CroudsourcingPageState extends State<CroudsourcingPage> {
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Padding(
@@ -366,7 +364,7 @@ class _CroudsourcingPageState extends State<CroudsourcingPage> {
                                   ),
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 15,
                               ),
                               Column(
@@ -670,7 +668,7 @@ class _CroudsourcingPageState extends State<CroudsourcingPage> {
             );
           } else {
             // If there are no not expired crowdsourcing items, show the message
-            return Center(
+            return const Center(
               child: Text(
                 'No crowdsourcing available.',
                 style: TextStyle(fontSize: 16.0),

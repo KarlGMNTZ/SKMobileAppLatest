@@ -8,7 +8,7 @@ class NotifPage extends StatefulWidget {
   const NotifPage({Key? key}) : super(key: key);
 
   @override
-  _NotifPageState createState() => _NotifPageState();
+  State<NotifPage> createState() => _NotifPageState();
 }
 
 class _NotifPageState extends State<NotifPage> {
@@ -17,7 +17,7 @@ class _NotifPageState extends State<NotifPage> {
     super.initState();
 
     // Schedule the deletion after 5 seconds
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       deleteExpiredDocuments();
     });
   }
@@ -45,15 +45,15 @@ class _NotifPageState extends State<NotifPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Notification Details'),
+          title: const Text('Notification Details'),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Name: $name', style: TextStyle(fontSize: 16)),
+              Text('Name: $name', style: const TextStyle(fontSize: 16)),
               Text(
                   'Date & Time: ${DateFormat.yMMMd().add_jm().format(dateTime.toDate())}',
-                  style: TextStyle(fontSize: 14)),
+                  style: const TextStyle(fontSize: 14)),
             ],
           ),
           actions: [
@@ -61,7 +61,7 @@ class _NotifPageState extends State<NotifPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         );
@@ -73,7 +73,7 @@ class _NotifPageState extends State<NotifPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: TextWidget(
+        title: const TextWidget(
           text: 'Notifications',
           fontSize: 18,
           color: Colors.white,

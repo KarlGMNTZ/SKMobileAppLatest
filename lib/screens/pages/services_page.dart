@@ -99,15 +99,15 @@ class _ServicesPageState extends State<ServicesPage> {
     return Scaffold(
       floatingActionButton: box.read('role') == 'Admin'
           ? FloatingActionButton(
-              child: const Icon(Icons.add),
-              backgroundColor: Color.fromRGBO(245, 199, 177, 100),
+              backgroundColor: const Color.fromRGBO(245, 199, 177, 100),
               onPressed: () {
                 addServicesDialog(context, false, '', '');
-              })
+              },
+              child: const Icon(Icons.add))
           : null,
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(245, 199, 177, 100),
-        title: TextWidget(
+        backgroundColor: const Color.fromRGBO(245, 199, 177, 100),
+        title: const TextWidget(
           text: 'Services',
           fontSize: 18,
           color: Colors.white,
@@ -191,7 +191,7 @@ class _ServicesPageState extends State<ServicesPage> {
                                           data.docs[i]['imageUrl']),
                                       fit: BoxFit.cover,
                                     ),
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                         color: Colors.grey,
                                         offset: Offset(0, 2),
@@ -204,7 +204,7 @@ class _ServicesPageState extends State<ServicesPage> {
                                 Expanded(
                                   child: Container(
                                     width: 500, // Fixed width
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       color: Colors.white,
                                       boxShadow: [
                                         BoxShadow(
@@ -226,15 +226,15 @@ class _ServicesPageState extends State<ServicesPage> {
                                             fontSize: 20,
                                             fontFamily: 'Nexa',
                                           ),
-                                          SizedBox(height: 1),
-                                          SizedBox(height: 10),
+                                          const SizedBox(height: 1),
+                                          const SizedBox(height: 10),
                                           TextWidget(
                                             text: data.docs[i]['description'],
                                             fontSize: 12,
                                             fontFamily: 'Helvetica',
                                             maxLines: 100,
                                           ),
-                                           Visibility(
+                                          Visibility(
                                             visible:
                                                 box.read('role') == 'Admin',
                                             child: IconButton(
@@ -279,7 +279,7 @@ class _ServicesPageState extends State<ServicesPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: TextWidget(
+          title: const TextWidget(
             text: 'Posting Services',
             fontSize: 18,
             fontFamily: 'Bold',
@@ -354,7 +354,7 @@ class _ServicesPageState extends State<ServicesPage> {
                           });
                         }
                       },
-                      child: Text('Set Expiration Date'),
+                      child: const Text('Set Expiration Date'),
                     ),
                   )
                 ],
@@ -366,7 +366,7 @@ class _ServicesPageState extends State<ServicesPage> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: TextWidget(
+              child: const TextWidget(
                 text: 'Close',
                 fontSize: 14,
               ),
@@ -415,7 +415,7 @@ class _ServicesPageState extends State<ServicesPage> {
                   );
                 }
               },
-              child: TextWidget(
+              child: const TextWidget(
                 text: 'Post',
                 fontSize: 14,
               ),
@@ -427,7 +427,8 @@ class _ServicesPageState extends State<ServicesPage> {
   }
 }
 
-Future<void> editServiceImage(BuildContext context, String serviceId, doc) async {
+Future<void> editServiceImage(
+    BuildContext context, String serviceId, doc) async {
   final picker = ImagePicker();
   XFile pickedImage;
   try {

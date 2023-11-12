@@ -4,11 +4,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sk_app/screens/auth/landing_screen.dart';
 import 'package:sk_app/screens/auth/login_screen.dart';
-import 'package:sk_app/screens/home_screen.dart';
 import 'package:sk_app/services/signup.dart';
 import 'package:sk_app/widgets/button_widget.dart';
 import 'package:sk_app/widgets/text_widget.dart';
@@ -31,7 +29,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Future<void> _sendOTP() async {
     try {
       await _auth.verifyPhoneNumber(
-        phoneNumber: '+639928594661',
+        phoneNumber: '+63${contactNumberController.text}',
         verificationCompleted: (PhoneAuthCredential credential) async {
           await _auth.signInWithCredential(credential);
         },
@@ -42,11 +40,12 @@ class _SignupScreenState extends State<SignupScreen> {
           setState(() {
             _verificationId = verificationId;
           });
+          _showOTPDialog();
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           // Auto-retrieval timeout
         },
-        timeout: Duration(seconds: 60),
+        timeout: const Duration(seconds: 60),
       );
     } catch (e) {
       print('Error: $e');
@@ -72,7 +71,7 @@ class _SignupScreenState extends State<SignupScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Enter OTP'),
+          title: const Text('Enter OTP'),
           content: TextField(
             onChanged: (value) {
               enteredOTP = value;
@@ -85,14 +84,14 @@ class _SignupScreenState extends State<SignupScreen> {
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
                 _verifyAndRegister(enteredOTP);
               },
-              child: Text('Verify'),
+              child: const Text('Verify'),
             ),
           ],
         );
@@ -354,7 +353,7 @@ class _SignupScreenState extends State<SignupScreen> {
             const SizedBox(
               height: 10,
             ),
-            Center(
+            const Center(
               child: TextWidget(
                 text: 'Sign Up',
                 fontSize: 24,
@@ -491,14 +490,15 @@ class _SignupScreenState extends State<SignupScreen> {
                           : 'Select Birthdate',
                       fontSize: 16,
                     ),
-                    Icon(Icons.calendar_today, color: Colors.black),
+                    const Icon(Icons.calendar_today, color: Colors.black),
                   ],
                 ),
               ),
             ),
             Text(
               'Age: ${calculateAge(birthdate)}',
-              style: TextStyle(fontSize: 16), // Adjust the font size as needed
+              style: const TextStyle(
+                  fontSize: 16), // Adjust the font size as needed
             ),
             TextFieldWidget(label: 'Email', controller: emailController),
             const SizedBox(
@@ -515,17 +515,17 @@ class _SignupScreenState extends State<SignupScreen> {
             Row(
               children: [
                 Container(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: Text(
+                  child: const Text(
                     '+63',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 // Adjust the space between the box and the text field
                 Expanded(
                   child: TextFieldWidget(
@@ -968,7 +968,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   showToast('Upload proof of residency');
                 }
               },
-              child: Text('Sign Up'),
+              child: const Text('Sign Up'),
             ),
             const SizedBox(
               height: 10,
@@ -976,7 +976,7 @@ class _SignupScreenState extends State<SignupScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextWidget(
+                const TextWidget(
                     text: "Already had an account?",
                     fontSize: 12,
                     color: Colors.black),
@@ -985,7 +985,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (context) => LoginScreen()));
                   }),
-                  child: TextWidget(
+                  child: const TextWidget(
                       fontFamily: 'Bold',
                       text: "Login Now",
                       fontSize: 14,
@@ -1044,9 +1044,11 @@ class _SignupScreenState extends State<SignupScreen> {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
 
-      showToast("Registered Successfully!");
+      // Navigator.of(context).pushReplacement(
+      //     MaterialPageRoute(builder: (context) => const LandingScreen()));
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => LandingScreen()));
+          MaterialPageRoute(builder: (context) => LoginScreen()));
+      showToast("Registered Successfully!");
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         showToast('The password provided is too weak.');

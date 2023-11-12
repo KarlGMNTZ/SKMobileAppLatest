@@ -287,8 +287,8 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(245, 199, 177, 100),
-        title: TextWidget(
+        backgroundColor: const Color.fromRGBO(245, 199, 177, 100),
+        title: const TextWidget(
           text: 'Help Desk',
           fontSize: 18,
           color: Colors.white,
@@ -314,13 +314,13 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
               padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: [
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Spacer(),
+                      Spacer(),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -330,7 +330,7 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                         label: 'Input your concern',
                         controller: concernController,
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       GestureDetector(
                         onTap: () {
                           uploadImage(context, 'gallery');
@@ -340,7 +340,7 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                             height: 150,
                             width: 300,
                             decoration: BoxDecoration(
-                              color: Color.fromRGBO(216, 111, 62, 0.969),
+                              color: const Color.fromRGBO(216, 111, 62, 0.969),
                               image: idImageFileName.isEmpty
                                   ? null
                                   : DecorationImage(
@@ -348,7 +348,7 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                                       fit: BoxFit.cover,
                                     ),
                             ),
-                            child: Stack(
+                            child: const Stack(
                               children: [
                                 Center(
                                   child: Text(
@@ -372,10 +372,10 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
-                              Color.fromRGBO(245, 199, 177, 100),
+                              const Color.fromRGBO(245, 199, 177, 100),
                             ), // Set your desired color
                           ),
-                          child: Text(
+                          child: const Text(
                             'Upload File',
                             style: TextStyle(
                               fontSize: 16,
@@ -397,16 +397,16 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
-                              Color.fromRGBO(245, 199, 177, 100),
+                              const Color.fromRGBO(245, 199, 177, 100),
                             ), // Set your desired color
                           ),
-                          child: TextWidget(
+                          child: const TextWidget(
                             text: 'Submit',
                             fontSize: 14,
                           ),
                         ),
                       ),
-                      SizedBox(height: 50),
+                      const SizedBox(height: 50),
                       const Center(
                         child: Text(
                           'For more information please contact',

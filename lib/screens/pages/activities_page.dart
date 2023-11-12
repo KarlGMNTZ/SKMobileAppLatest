@@ -105,7 +105,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
               })
           : null,
       appBar: AppBar(
-        title: TextWidget(
+        title: const TextWidget(
           text: 'Activities',
           fontSize: 18,
           color: Colors.white,
@@ -170,6 +170,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => SpecificActivity(
+                              activityID: activity.id,
                               activityName: activity['name'],
                               activityDescription: activity['description'],
                               imageUrl: activity['imageUrl'],
@@ -192,7 +193,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
                     ),
                     trailing: box.read('role') == 'Admin'
                         ? IconButton(
-                            icon: Icon(Icons.edit),
+                            icon: const Icon(Icons.edit),
                             onPressed: () {
                               editActivityImage(context, activity.id);
                             },
@@ -221,7 +222,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: TextWidget(
+          title: const TextWidget(
             text: 'Posting Activities',
             fontSize: 18,
             fontFamily: 'Bold',
@@ -369,7 +370,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Visibility(
@@ -390,7 +391,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
                         });
                       }
                     },
-                    child: Text('Set Expiration Date'),
+                    child: const Text('Set Expiration Date'),
                   ),
                 )
               ],
@@ -401,58 +402,58 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: TextWidget(
+              child: const TextWidget(
                 text: 'Close',
                 fontSize: 14,
               ),
             ),
             TextButton(
-  onPressed: () async {
-    try {
-      if (inEdit) {
-        await FirebaseFirestore.instance
-            .collection('Activities')
-            .doc(id)
-            .update({
-          'name': nameController.text,
-          'description': descController.text
-        });
-      } else {
-        addActivities(
-          idImageURL,
-          nameController.text,
-          descController.text,
-          dateController.text,
-          expirationDate as Timestamp,
-        );
-      }
+              onPressed: () async {
+                try {
+                  if (inEdit) {
+                    await FirebaseFirestore.instance
+                        .collection('Activities')
+                        .doc(id)
+                        .update({
+                      'name': nameController.text,
+                      'description': descController.text
+                    });
+                  } else {
+                    addActivities(
+                      idImageURL,
+                      nameController.text,
+                      descController.text,
+                      dateController.text,
+                      expirationDate as Timestamp,
+                    );
+                  }
 
-      Navigator.pop(context);
+                  Navigator.pop(context);
 
-      // Show success toast
-      Fluttertoast.showToast(
-        msg: 'Post successfully updated!',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
-    } catch (e) {
-      // Show error toast
-      Fluttertoast.showToast(
-        msg: 'Please fill out all required fields',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
-    }
-  },
-  child: TextWidget(
-    text: 'Post',
-    fontSize: 14,
-  ),
-)
+                  // Show success toast
+                  Fluttertoast.showToast(
+                    msg: 'Post successfully updated!',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    backgroundColor: Colors.green,
+                    textColor: Colors.white,
+                  );
+                } catch (e) {
+                  // Show error toast
+                  Fluttertoast.showToast(
+                    msg: 'Please fill out all required fields',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                  );
+                }
+              },
+              child: const TextWidget(
+                text: 'Post',
+                fontSize: 14,
+              ),
+            )
           ],
         );
       },

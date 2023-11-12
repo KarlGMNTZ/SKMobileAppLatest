@@ -5,16 +5,18 @@ class SpecificActivity extends StatefulWidget {
   final String activityName;
   final String activityDescription;
   final String imageUrl;
+  final String activityID;
 
   const SpecificActivity({
     super.key,
     required this.activityName,
     required this.activityDescription,
     required this.imageUrl,
+    required this.activityID,
   });
 
   @override
-  _SpecificActivityState createState() => _SpecificActivityState();
+  State<SpecificActivity> createState() => _SpecificActivityState();
 }
 
 class _SpecificActivityState extends State<SpecificActivity> {
@@ -45,7 +47,9 @@ class _SpecificActivityState extends State<SpecificActivity> {
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => RegistrationPage()));
+                      builder: (context) => RegistrationPage(
+                            activityID: widget.activityID,
+                          )));
                 },
                 child: const Text('Register'),
               ),

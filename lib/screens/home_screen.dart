@@ -18,10 +18,9 @@ import 'package:sk_app/screens/pages/SpecificActivity.dart';
 import 'package:sk_app/screens/pages/UserInfoDisplay.dart';
 import 'package:sk_app/screens/pages/activities_page.dart';
 import 'package:sk_app/screens/pages/announcements_page.dart';
-import 'package:sk_app/screens/pages/crowdsourcing_page.dart';
+import 'package:sk_app/screens/pages/helpdesk/evaluate_activities.dart';
 import 'package:sk_app/screens/pages/helpdesk/main_helpdesk_page.dart';
 import 'package:sk_app/screens/pages/notif_page.dart';
-import 'package:sk_app/screens/pages/registration_page.dart';
 import 'package:sk_app/screens/pages/services_page.dart';
 import 'package:sk_app/screens/pages/survey_page.dart';
 import 'package:sk_app/screens/pages/tabbar.dart';
@@ -429,7 +428,7 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: TextWidget(
+          title: const TextWidget(
             text: 'Posting Activities',
             fontSize: 18,
             fontFamily: 'Bold',
@@ -585,7 +584,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: TextWidget(
+              child: const TextWidget(
                 text: 'Close',
                 fontSize: 14,
               ),
@@ -617,12 +616,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: TextWidget(
+                      title: const TextWidget(
                         text: 'Error',
                         fontSize: 18,
                         fontFamily: 'Bold',
                       ),
-                      content: TextWidget(
+                      content: const TextWidget(
                         text:
                             'Selected date is expired. Please select a valid date.',
                         fontSize: 14,
@@ -632,7 +631,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: TextWidget(
+                          child: const TextWidget(
                             text: 'OK',
                             fontSize: 14,
                           ),
@@ -642,7 +641,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }
               },
-              child: TextWidget(
+              child: const TextWidget(
                 text: 'Post',
                 fontSize: 14,
               ),
@@ -663,9 +662,9 @@ class _HomeScreenState extends State<HomeScreen> {
     switch (index) {
       case 0:
         return _buildSection([
-          SizedBox(height: 10), // Add spacing at the top of the carousel
+          const SizedBox(height: 10), // Add spacing at the top of the carousel
 
-          Container(
+          SizedBox(
             height: 300, // Adjust the height of the carousel as needed
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
@@ -696,7 +695,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Text('No activities available.'),
                   );
                 }
-                return Container(
+                return SizedBox(
                   height: 250,
                   child: CarouselSlider.builder(
                     itemCount: data.docs.length,
@@ -708,7 +707,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       // Check if the activity has not expired
                       if (expirationDate.toDate().isAfter(DateTime.now())) {
                         return Card(
-                          child: Container(
+                          child: SizedBox(
                             width: 1000,
                             child: ListTile(
                               onTap: () {
@@ -731,6 +730,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => SpecificActivity(
+                                        activityID: data.docs[index].id,
                                         activityName: data.docs[index]['name'],
                                         activityDescription: data.docs[index]
                                             ['description'],
@@ -740,7 +740,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   );
                                 }
                               },
-                              contentPadding: EdgeInsets.all(16.0),
+                              contentPadding: const EdgeInsets.all(16.0),
                               title: TextWidget(
                                 text: data.docs[index]['name'],
                                 fontSize: 18,
@@ -770,7 +770,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       } else {
                         // Activity has expired, don't include it in the carousel
-                        return SizedBox.shrink();
+                        return const SizedBox.shrink();
                       }
                     },
                     options: CarouselOptions(
@@ -778,8 +778,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       viewportFraction: 0.8,
                       enlargeCenterPage: true,
                       autoPlay: true,
-                      autoPlayInterval: Duration(seconds: 3),
-                      autoPlayAnimationDuration: Duration(milliseconds: 800),
+                      autoPlayInterval: const Duration(seconds: 3),
+                      autoPlayAnimationDuration:
+                          const Duration(milliseconds: 800),
                       autoPlayCurve: Curves.fastOutSlowIn,
                     ),
                   ),
@@ -787,7 +788,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           _buildGridTile(
             context,
             'Announcements',
@@ -837,13 +838,19 @@ class _HomeScreenState extends State<HomeScreen> {
               context,
               'Help Desk',
               'https://cdn-icons-png.flaticon.com/512/5639/5639690.png?ga=GA1.1.472911080.1695727240',
-              MainHelpdeskScreen(),
+              const MainHelpdeskScreen(),
+            ),
+            _buildGridTile(
+              context,
+              'Evaluate Activities',
+              'https://cdn-icons-png.flaticon.com/512/6192/6192771.png',
+              const EvaluateActivities(),
             ),
             // ... other grid tiles
           ],
         );
       case 4:
-        return UserInfoDisplay();
+        return const UserInfoDisplay();
       // ... other cases
       default:
         return const SizedBox.shrink();

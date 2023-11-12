@@ -11,8 +11,10 @@ import 'package:path/path.dart' as path;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class UserInfoDisplay extends StatefulWidget {
+  const UserInfoDisplay({super.key});
+
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  State<UserInfoDisplay> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<UserInfoDisplay> {
@@ -54,7 +56,7 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
       File newImageFile = File(pickedImage.path);
 
       try {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Row(
             children: [
               CircularProgressIndicator(
@@ -116,7 +118,7 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
           child: Column(
             children: [
               userData.isEmpty
-                  ? Center(child: CircularProgressIndicator())
+                  ? const Center(child: CircularProgressIndicator())
                   : Container(
                       padding: const EdgeInsets.all(10),
                       child: Card(
@@ -145,12 +147,12 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
                                             context, currentUser!.uid);
                                       },
                                       child: Container(
-                                        decoration: BoxDecoration(
+                                        decoration: const BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: Colors.blue,
                                         ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(8.0),
                                           child: Icon(
                                             Icons.edit,
                                             color: Colors.white,
@@ -162,11 +164,11 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 20),
+                              const SizedBox(height: 20),
                               ListTile(
                                 title: Text(
-                                ' ${userData['email']}',
-                                style: TextStyle(
+                                  ' ${userData['email']}',
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black,
@@ -176,14 +178,14 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
                               ListTile(
                                 title: Text(
                                   'Address: ${userData['address']}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
                                   ),
                                 ),
                                 subtitle: Text(
                                   'Age: ${userData['age']}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
                                   ),
@@ -192,14 +194,14 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
                               ListTile(
                                 title: Text(
                                   'Mobile Number: ${userData['number']}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
                                   ),
                                 ),
                                 subtitle: Text(
                                   'Educational Level: ${userData['school']}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
                                   ),
@@ -208,14 +210,14 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
                               ListTile(
                                 title: Text(
                                   'Youthclass: ${userData['youthclass']}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
                                   ),
                                 ),
                                 subtitle: Text(
                                   'Work: ${userData['work']}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
                                   ),
@@ -224,14 +226,14 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
                               ListTile(
                                 title: Text(
                                   'Civil Status: ${userData['civilstatus']}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
                                   ),
                                 ),
                                 subtitle: Text(
                                   'Birthdate: ${DateFormat('yyyy-MM-dd').format((userData['birthdate'] as Timestamp).toDate())}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
                                   ),
@@ -240,7 +242,7 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
                               ListTile(
                                 title: Text(
                                   'Purok: ${userData['purok']}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
                                   ),
@@ -255,17 +257,17 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => EditProfileScreen(),
+                      builder: (context) => const EditProfileScreen(),
                     ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color.fromARGB(240, 237, 162, 124),
+                  backgroundColor: const Color.fromARGB(240, 237, 162, 124),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: SizedBox(
+                child: const SizedBox(
                   width: 200,
                   height: 50,
                   child: Center(

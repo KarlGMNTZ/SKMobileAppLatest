@@ -6,8 +6,10 @@ import 'package:sk_app/screens/home_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LandingScreen extends StatefulWidget {
+  const LandingScreen({super.key});
+
   @override
-  _LandingScreenState createState() => _LandingScreenState();
+  State<LandingScreen> createState() => _LandingScreenState();
 }
 
 class _LandingScreenState extends State<LandingScreen> {
@@ -18,7 +20,7 @@ class _LandingScreenState extends State<LandingScreen> {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
 
-    final userData = docSnapshot.data() as Map<String, dynamic>?;
+    final userData = docSnapshot.data();
 
     if (userData != null) {
       final isApproved = (userData['isActive'] as bool?) ?? false;
@@ -43,15 +45,15 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       //appBar: AppBar(
-        //title: Text('PENDING FOR APPROVAL'),
-        //backgroundColor: Colors.deepPurple,
-        //centerTitle: true,
+      //title: Text('PENDING FOR APPROVAL'),
+      //backgroundColor: Colors.deepPurple,
+      //centerTitle: true,
       //),
       body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         stream: userStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
-            final userData = snapshot.data?.data() as Map<String, dynamic>?;
+            final userData = snapshot.data?.data();
 
             if (userData != null) {
               return buildLandingScreen(userData);
@@ -60,7 +62,7 @@ class _LandingScreenState extends State<LandingScreen> {
               return buildNotApprovedScreen();
             }
           } else {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
               ),
@@ -75,30 +77,30 @@ class _LandingScreenState extends State<LandingScreen> {
     final isApproved = userData['isActive'] as bool? ?? false;
 
     return AnimatedSwitcher(
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
       child: isApproved ? buildApprovedScreen() : buildNotApprovedScreen(),
     );
   }
 
-Widget buildNotApprovedScreen() {
+  Widget buildNotApprovedScreen() {
     return Card(
-      margin: EdgeInsets.all(20),
+      margin: const EdgeInsets.all(20),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
-        side: BorderSide(color: Colors.red),
+        side: const BorderSide(color: Colors.red),
       ),
       child: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.all(16),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
               color: Colors.red,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(15.0),
                 topRight: Radius.circular(15.0),
               ),
             ),
-            child: Row(
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
@@ -117,9 +119,9 @@ Widget buildNotApprovedScreen() {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 100,
-            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
@@ -130,42 +132,44 @@ Widget buildNotApprovedScreen() {
                   width: 300,
                   height: 250,
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   "Oops! You are not approved by the admin.",
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.red,
                   ),
                 ),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 ElevatedButton(
                   onPressed: () {
                     showContactAdminOptions(context);
                   },
-                  child: Text("Contact Admin"),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
-                    onPrimary: Colors.white,
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.green,
                   ),
+                  child: const Text("Contact Admin"),
                 ),
-                SizedBox(height: 10),
-                Text(
+                const SizedBox(height: 10),
+                const Text(
                   'or',
                   style: TextStyle(
-                    color: Color.fromARGB(255, 155, 147, 147), // Darker shade of grey
+                    color: Color.fromARGB(
+                        255, 155, 147, 147), // Darker shade of grey
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 GestureDetector(
                   onTap: () async {
                     await FirebaseAuth.instance.signOut();
+                    if (!context.mounted) return;
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => LoginScreen()),
                     );
                   },
-                  child: Text(
+                  child: const Text(
                     "Sign in with another account",
                     style: TextStyle(
                       fontSize: 16,
@@ -184,23 +188,23 @@ Widget buildNotApprovedScreen() {
 
   Widget buildApprovedScreen() {
     return Card(
-      margin: EdgeInsets.all(20),
+      margin: const EdgeInsets.all(20),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
-        side: BorderSide(color: Colors.green),
+        side: const BorderSide(color: Colors.green),
       ),
       child: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.all(16),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
               color: Colors.green,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(15.0),
                 topRight: Radius.circular(15.0),
               ),
             ),
-            child: Row(
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
@@ -219,7 +223,7 @@ Widget buildNotApprovedScreen() {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 100,
           ),
           Padding(
@@ -232,27 +236,28 @@ Widget buildNotApprovedScreen() {
                   width: 300,
                   height: 250,
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   "Hooray! You are approved!",
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.green,
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const HomeScreen()),
                     );
                   },
-                  child: Text("Go to Home"),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.deepPurple,
-                    onPrimary: Colors.white,
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.deepPurple,
                   ),
+                  child: const Text("Go to Home"),
                 ),
               ],
             ),
@@ -266,29 +271,27 @@ Widget buildNotApprovedScreen() {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return Container(
-          child: Wrap(
-            children: <Widget>[
-              ListTile(
-                leading: Icon(Icons.email),
-                title: Text('Send Email'),
-                onTap: () {
-                  //replace lng
-                  launch('bien:admin@example.com');
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.phone),
-                title: Text('Call Admin'),
-                onTap: () {
-                  // Rreplace lg
-                  launch('tel:+6391122');
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
+        return Wrap(
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(Icons.email),
+              title: const Text('Send Email'),
+              onTap: () {
+                //replace lng
+                launch('bien:admin@example.com');
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.phone),
+              title: const Text('Call Admin'),
+              onTap: () {
+                // Rreplace lg
+                launch('tel:+6391122');
+                Navigator.pop(context);
+              },
+            ),
+          ],
         );
       },
     );

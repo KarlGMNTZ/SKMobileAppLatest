@@ -134,7 +134,7 @@ class _SurveyPageState extends State<SurveyPage> {
                     description,
                     textAlign: TextAlign.justify, // Justify the text
                     softWrap: true, // Enable line wrapping
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
                     ),

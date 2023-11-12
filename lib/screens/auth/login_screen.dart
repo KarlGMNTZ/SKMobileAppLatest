@@ -55,7 +55,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ],
             ),
-            Center(
+            const Center(
               child: TextWidget(
                 text: 'Sign In',
                 fontSize: 24,
@@ -82,7 +82,7 @@ class LoginScreen extends StatelessWidget {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => ForgotPasswordScreen()));
                   }),
-                  child: TextWidget(
+                  child: const TextWidget(
                       fontFamily: 'Bold',
                       text: "Forgot Password?",
                       fontSize: 12,
@@ -105,14 +105,14 @@ class LoginScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextWidget(
+                const TextWidget(
                     text: "No Account?", fontSize: 12, color: Colors.black),
                 TextButton(
                   onPressed: (() {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (context) => const SignupScreen()));
                   }),
-                  child: TextWidget(
+                  child: const TextWidget(
                       fontFamily: 'Bold',
                       text: "Signup Now",
                       fontSize: 14,
@@ -126,7 +126,7 @@ class LoginScreen extends StatelessWidget {
                 //     MaterialPageRoute(
                 //         builder: (context) => SignupScreen()));
               }),
-              child: TextWidget(
+              child: const TextWidget(
                   fontFamily: 'Bold',
                   text: "Continue as Admin",
                   fontSize: 14,
@@ -149,21 +149,28 @@ class LoginScreen extends StatelessWidget {
       if (user != null) {
         // Retrieve additional user data from your database
         // Assuming you have a 'users' collection in Firestore
-        DocumentSnapshot userData = await FirebaseFirestore.instance
+        var res = await FirebaseFirestore.instance
             .collection('Users')
             .doc(user.uid)
             .get();
 
         // Check if the account is active
-        bool isActive = userData['isActive'] ?? false;
-        if (isActive) {
-          // If the account is active, navigate to the home screen
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const HomeScreen()));
+        var userData = res.data();
+        bool? isActive = false;
+        if (userData != null) {
+          isActive = userData['isActive'];
+          if (isActive!) {
+            // If the account is active, navigate to the home screen
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const HomeScreen()));
+          } else {
+            // If the account is not active, show a toast and sign out
+            await FirebaseAuth.instance.signOut();
+            showToast("Account is not approve by admin.");
+          }
         } else {
-          // If the account is not active, show a toast and sign out
           await FirebaseAuth.instance.signOut();
-          showToast("Account is not approve by admin.");
+          showToast("User did not exist.");
         }
       }
     } on FirebaseAuthException catch (e) {

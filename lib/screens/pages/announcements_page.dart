@@ -13,7 +13,9 @@ import 'package:path/path.dart' as path;
 import 'dart:io';
 
 class AnnouncementsPage extends StatefulWidget {
-  const AnnouncementsPage({Key? key});
+  const AnnouncementsPage({
+    super.key,
+  });
 
   @override
   State<AnnouncementsPage> createState() => _AnnouncementsPageState();
@@ -97,15 +99,15 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
     return Scaffold(
       floatingActionButton: box.read('role') == 'Admin'
           ? FloatingActionButton(
-              child: const Icon(Icons.add),
               backgroundColor: const Color.fromRGBO(245, 199, 177, 100),
               onPressed: () {
                 addAnnouncementDialog(context, false, '', '');
-              })
+              },
+              child: const Icon(Icons.add))
           : null,
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(245, 199, 177, 100),
-        title: TextWidget(
+        backgroundColor: const Color.fromRGBO(245, 199, 177, 100),
+        title: const TextWidget(
           text: 'Announcements',
           fontSize: 18,
           color: Colors.white,
@@ -162,7 +164,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 elevation: 4.0,
-                margin: EdgeInsets.all(10.0),
+                margin: const EdgeInsets.all(10.0),
                 child: InkWell(
                   onTap: () {
                     if (box.read('role') == 'Admin') {
@@ -184,7 +186,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
                       Container(
                         height: 200,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
+                          borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(12.0),
                             topRight: Radius.circular(12.0),
                           ),
@@ -204,7 +206,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
                               fontSize: 20,
                               fontFamily: 'Nexa',
                             ),
-                            SizedBox(height: 5),
+                            const SizedBox(height: 5),
                             TextWidget(
                               text: DateFormat.yMMMd()
                                   .add_jm()
@@ -213,7 +215,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
                               color: Colors.black,
                               fontFamily: 'Bold',
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             TextWidget(
                               text: announcement['description'],
                               fontSize: 14,
@@ -223,7 +225,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
                             Visibility(
                               visible: box.read('role') == 'Admin',
                               child: IconButton(
-                                icon: Icon(Icons.edit),
+                                icon: const Icon(Icons.edit),
                                 onPressed: () {
                                   editAnnouncementImage(
                                       context, announcement.id);
@@ -249,7 +251,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
                                     });
                                   }
                                 },
-                                child: Text('Set Expiration Date'),
+                                child: const Text('Set Expiration Date'),
                               ),
                             ),
                           ],
@@ -280,7 +282,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: TextWidget(
+          title: const TextWidget(
             text: 'Posting Announcement',
             fontSize: 18,
             fontFamily: 'Bold',
@@ -346,7 +348,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
                         });
                       }
                     },
-                    child: Text('Set Expiration Date'),
+                    child: const Text('Set Expiration Date'),
                   ),
                 )
               ],
@@ -357,7 +359,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: TextWidget(
+              child: const TextWidget(
                 text: 'Close',
                 fontSize: 14,
               ),
@@ -405,7 +407,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
                   );
                 }
               },
-              child: TextWidget(
+              child: const TextWidget(
                 text: 'Post',
                 fontSize: 14,
               ),

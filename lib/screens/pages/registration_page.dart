@@ -11,11 +11,14 @@ import 'package:sk_app/widgets/textfield_widget.dart';
 import 'package:path/path.dart' as path;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-class RegistrationPage extends StatefulWidget {
-  RegistrationPage({Key? key}) : super(key: key);
+import '../../widgets/toast_widget.dart';
 
+class RegistrationPage extends StatefulWidget {
+  const RegistrationPage({Key? key, required this.activityID})
+      : super(key: key);
+  final String activityID;
   @override
-  _RegistrationPageState createState() => _RegistrationPageState();
+  State<RegistrationPage> createState() => _RegistrationPageState();
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
@@ -44,6 +47,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       idImageFile = File(pickedImage.path);
 
       try {
+        if (!context.mounted) return;
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -120,6 +124,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         idFile = pickedFile;
 
         try {
+          if (!context.mounted) return;
           showDialog(
             context: context,
             barrierDismissible: false,
@@ -178,8 +183,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(245, 199, 177, 100),
-        title: TextWidget(
+        backgroundColor: const Color.fromRGBO(245, 199, 177, 100),
+        title: const TextWidget(
           text: 'Fill out the form',
           fontSize: 18,
           color: Colors.white,
@@ -205,13 +210,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
               padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: [
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Spacer(),
+                      Spacer(),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -221,14 +226,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         label: 'Input Team Name',
                         controller: teamnameController,
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       TextFieldWidget(
                         height: 150,
                         maxLine: 10,
                         label: 'Input Comments',
                         controller: commentController,
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       GestureDetector(
                         onTap: () {
                           uploadImage(context, 'gallery');
@@ -238,7 +243,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             height: 50,
                             width: 300,
                             decoration: BoxDecoration(
-                              color: Color.fromRGBO(216, 111, 62, 0.969),
+                              color: const Color.fromRGBO(216, 111, 62, 0.969),
                               image: idImageFileName.isEmpty
                                   ? null
                                   : DecorationImage(
@@ -246,7 +251,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                       fit: BoxFit.cover,
                                     ),
                             ),
-                            child: Stack(
+                            child: const Stack(
                               children: [
                                 Center(
                                   child: Text(
@@ -262,7 +267,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Center(
@@ -272,10 +277,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
-                              Color.fromRGBO(245, 199, 177, 100),
+                              const Color.fromRGBO(245, 199, 177, 100),
                             ),
                           ),
-                          child: Text(
+                          child: const Text(
                             'Upload File',
                             style: TextStyle(
                               fontSize: 16,
@@ -288,29 +293,33 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         child: ElevatedButton(
                           onPressed: () async {
                             // Add the registration to Firebase
-                            final registrationId = await addRegistration(
+                            await addRegistration(
                                 idImageFileUrl,
                                 teamnameController.text,
                                 commentController.text,
-                                idFileFileUrl);
+                                idFileFileUrl,
+                                widget.activityID);
+                            if (!context.mounted) return;
+                            Navigator.pop(context);
+                            showToast("Successfully Registered");
 
                             // Store the registration ID in the activities collection
-                            final activitiesCollection = FirebaseFirestore
-                                .instance
-                                .collection('Activities');
+                            // final activitiesCollection = FirebaseFirestore
+                            //     .instance
+                            //     .collection('Activities');
 
-                            await activitiesCollection.doc('id').update({
-                              'regId': FieldValue.arrayUnion([registrationId]),
-                            });
+                            // await activitiesCollection.doc('id').update({
+                            //   'regId': FieldValue.arrayUnion([registrationId]),
+                            // });
 
                             // Navigate back to the first page of the application
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
-                              Color.fromRGBO(245, 199, 177, 100),
+                              const Color.fromRGBO(245, 199, 177, 100),
                             ),
                           ),
-                          child: TextWidget(
+                          child: const TextWidget(
                             text: 'Submit',
                             fontSize: 14,
                           ),
