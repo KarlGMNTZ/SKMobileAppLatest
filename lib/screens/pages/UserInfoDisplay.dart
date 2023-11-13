@@ -253,28 +253,6 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
                         ),
                       ),
                     ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const EditProfileScreen(),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(240, 237, 162, 124),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: const SizedBox(
-                  width: 200,
-                  height: 50,
-                  child: Center(
-                    child: Text('Edit Profile'),
-                  ),
-                ),
-              ),
             ],
           ),
         ),

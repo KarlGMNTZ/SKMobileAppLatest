@@ -182,14 +182,14 @@ class _ServicesPageState extends State<ServicesPage> {
                             child: Column(
                               children: [
                                 Container(
-                                  height: 300,
-                                  width: 500, // Fixed width
+                                  height: 250,
+                                  width: 400, // Fixed width
                                   decoration: BoxDecoration(
                                     color: Colors.grey,
                                     image: DecorationImage(
                                       image: NetworkImage(
                                           data.docs[i]['imageUrl']),
-                                      fit: BoxFit.cover,
+                                      fit: BoxFit.contain,
                                     ),
                                     boxShadow: const [
                                       BoxShadow(
@@ -446,7 +446,7 @@ Future<void> editServiceImage(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => const Padding(
-          padding: EdgeInsets.only(left: 30, right: 30),
+          padding: EdgeInsets.only(left: 10, right: 10),
           child: AlertDialog(
             title: Row(
               children: [
@@ -457,7 +457,7 @@ Future<void> editServiceImage(
                   width: 20,
                 ),
                 Text(
-                  'Uploading . . .',
+                  'Uploading . .',
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -483,7 +483,6 @@ Future<void> editServiceImage(
         'imageUrl': newImageURL,
       });
 
-      Navigator.of(context).pop();
       Navigator.of(context).pop();
 
       // Optionally, you can show a success message or perform other actions

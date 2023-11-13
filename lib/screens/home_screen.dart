@@ -24,6 +24,7 @@ import 'package:sk_app/screens/pages/notif_page.dart';
 import 'package:sk_app/screens/pages/services_page.dart';
 import 'package:sk_app/screens/pages/survey_page.dart';
 import 'package:sk_app/screens/pages/tabbar.dart';
+import 'package:sk_app/screens/pages/usertabbar.dart';
 import 'package:sk_app/services/add_activities.dart';
 import 'package:sk_app/utils/colors.dart';
 import 'package:sk_app/widgets/text_widget.dart';
@@ -850,7 +851,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         );
       case 4:
-        return const UserInfoDisplay();
+        return const UsertabView();
       // ... other cases
       default:
         return const SizedBox.shrink();

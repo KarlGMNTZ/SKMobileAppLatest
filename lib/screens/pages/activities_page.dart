@@ -509,7 +509,7 @@ Future<void> editActivityImage(BuildContext context, String activityId) async {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => const Padding(
-          padding: EdgeInsets.only(left: 30, right: 30),
+          padding: EdgeInsets.only(left: 10, right: 10),
           child: AlertDialog(
             title: Row(
               children: [
@@ -520,7 +520,7 @@ Future<void> editActivityImage(BuildContext context, String activityId) async {
                   width: 20,
                 ),
                 Text(
-                  'Uploading . . .',
+                  'Uploading . .',
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,

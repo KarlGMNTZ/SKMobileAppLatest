@@ -27,6 +27,8 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
   late String idFileFileUrl = ''; // Separate variable for file URL
   late File idImageFile;
   late File idFile;
+  late String uploadedImageName = '';
+  late String uploadedFileName = '';
 
   Future<void> uploadImage(BuildContext context, String inputSource) async {
     final picker = ImagePicker();
@@ -47,7 +49,7 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) => const Padding(
-            padding: EdgeInsets.only(left: 30, right: 30),
+            padding: EdgeInsets.only(left: 10, right: 10),
             child: AlertDialog(
               title: Row(
                 children: [
@@ -55,7 +57,7 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                     color: Colors.black,
                   ),
                   SizedBox(
-                    width: 20,
+                    width: 40,
                   ),
                   Text(
                     'Uploading...',
@@ -80,7 +82,9 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
           firebaseStorageRef.getDownloadURL().then((imageUrl) {
             // Image successfully uploaded, and the URL is retrieved
             setState(() {
-              idImageFileUrl = imageUrl; // Use idImageFileUrl for the image URL
+              idImageFileUrl = imageUrl;
+              uploadedImageName =
+                  idImageFileName; // Use idImageFileUrl for the image URL
             });
             Navigator.of(context).pop(); // Close the loading dialog
           });
@@ -159,7 +163,9 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
             firebaseStorageRef.getDownloadURL().then((url) {
               // File successfully uploaded, and the URL is retrieved
               setState(() {
-                idFileFileUrl = url; // Use idFileFileUrl for the file URL
+                idFileFileUrl = url;
+                uploadedFileName =
+                    idFileFileName; // Use idFileFileUrl for the file URL
               });
               Navigator.of(context).pop(); // Close the loading dialog
             });
@@ -331,59 +337,81 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                         controller: concernController,
                       ),
                       const SizedBox(height: 30),
-                      GestureDetector(
-                        onTap: () {
-                          uploadImage(context, 'gallery');
+                      Text(
+                          'If you have images to upload and file please tap the upload image and upload file'),
+                      SizedBox(
+                        height: 10,
+                      ),
+
+                      ElevatedButton(
+                        onPressed: () {
+                          uploadImage(context,
+                              'gallery'); // Call your upload function here
                         },
-                        child: Center(
-                          child: Container(
-                            height: 150,
-                            width: 300,
-                            decoration: BoxDecoration(
-                              color: const Color.fromRGBO(216, 111, 62, 0.969),
-                              image: idImageFileName.isEmpty
-                                  ? null
-                                  : DecorationImage(
-                                      image: NetworkImage(idImageFileUrl),
-                                      fit: BoxFit.cover,
-                                    ),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color.fromRGBO(245, 199, 177, 100),
+                          ),
+                          fixedSize: MaterialStateProperty.all<Size>(
+                            Size(150, 40), // Set your desired width and height
+                          ), // Set your desired color
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Upload Image',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
                             ),
-                            child: const Stack(
-                              children: [
-                                Center(
-                                  child: Text(
-                                    'Upload Image Here!',
-                                    style: TextStyle(
-                                      color: Colors.white, // Set the text color
-                                      fontSize: 24, // Set the font size
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                          width:
+                              20), // Add some space between text and image name
+                      Text(
+                        uploadedImageName, // Display the uploaded image name
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () {
+                          uploadFile(context,
+                              'gallery'); // Call your upload function here
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color.fromRGBO(245, 199, 177, 100),
+                          ), // Set your desired color
+                          fixedSize: MaterialStateProperty.all<Size>(
+                            Size(150, 40), // Set your desired width and height
+                          ),
+                        ),
+                        child: const Text(
+                          'Upload File',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
                           ),
                         ),
                       ),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            uploadFile(context,
-                                'gallery'); // Call your upload function here
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              const Color.fromRGBO(245, 199, 177, 100),
-                            ), // Set your desired color
-                          ),
-                          child: const Text(
-                            'Upload File',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
-                          ),
+                      const SizedBox(
+                          width:
+                              20), // Add some space between text and image name
+                      Text(
+                        uploadedFileName, // Display the uploaded image name
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
                         ),
                       ),
+                      SizedBox(height: 20),
                       Center(
                         child: ElevatedButton(
                           onPressed: () {
@@ -398,11 +426,16 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
                               const Color.fromRGBO(245, 199, 177, 100),
+                            ),
+                            fixedSize: MaterialStateProperty.all<Size>(
+                              Size(
+                                  150, 40), // Set your desired width and height
                             ), // Set your desired color
                           ),
                           child: const TextWidget(
                             text: 'Submit',
-                            fontSize: 14,
+                            fontSize: 16,
+                            color: Colors.black,
                           ),
                         ),
                       ),

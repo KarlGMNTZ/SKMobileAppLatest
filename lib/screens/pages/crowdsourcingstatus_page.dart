@@ -50,10 +50,12 @@ class _CrowSourcingStatusPageState extends State<CrowSourcingStatusPage> {
   getCrowSource() async {
     try {
       listener = streamChats!.listen((event) async {
+        print('Received data from Firebase: $event');
         List data = [];
         for (var crowdsource in event.docs) {
           Map mapData = crowdsource.data();
-          mapData['dateTime'] = mapData['dateTime'].toDate().toString();
+          mapData['dateTime'] = mapData['dateTime']?.toDate()?.toString();
+
           for (var i = 0; i < mapData['comments'].length; i++) {
             mapData['comments'][i]['dateTime'] =
                 mapData['comments'][i]['dateTime'].toDate().toString();
@@ -61,23 +63,6 @@ class _CrowSourcingStatusPageState extends State<CrowSourcingStatusPage> {
           if (mapData.containsKey('expirationDate')) {
             mapData.remove('expirationDate');
           }
-
-          // var resUser = await FirebaseFirestore.instance
-          //     .collection('Users')
-          //     .where('id', isEqualTo: mapData['userId'])
-          //     .get();
-
-          // if (resUser.docs.isNotEmpty) {
-          //   var resUserDetails = await FirebaseFirestore.instance
-          //       .collection('Users')
-          //       .doc(resUser.docs[0].id)
-          //       .get();
-          //   var userDetails = resUserDetails.data();
-          //   userDetails!['birthdate'] =
-          //       userDetails['birthdate'].toDate().toString();
-          //   mapData['userDetails'] = userDetails;
-          // } else {}
-
           data.add(mapData);
         }
         var encodedData = jsonEncode(data);

@@ -184,7 +184,8 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Container(
-                        height: 200,
+                        height: 300,
+                        width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(12.0),
@@ -192,7 +193,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
                           ),
                           image: DecorationImage(
                             image: NetworkImage(announcement['imageUrl']),
-                            fit: BoxFit.cover,
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),
@@ -438,7 +439,7 @@ Future<void> editAnnouncementImage(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => const Padding(
-          padding: EdgeInsets.only(left: 30, right: 30),
+          padding: EdgeInsets.only(left: 10, right: 10),
           child: AlertDialog(
             title: Row(
               children: [
