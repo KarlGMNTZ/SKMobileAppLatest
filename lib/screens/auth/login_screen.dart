@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:sk_app/screens/auth/forgot_password_screen.dart';
 import 'package:sk_app/screens/auth/signup_screen.dart';
@@ -7,7 +8,7 @@ import 'package:sk_app/screens/home_screen.dart';
 import 'package:sk_app/widgets/button_widget.dart';
 import 'package:sk_app/widgets/text_widget.dart';
 import 'package:sk_app/widgets/textfield_widget.dart';
-
+import 'package:flutter/scheduler.dart';
 import '../../widgets/toast_widget.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -160,9 +161,12 @@ class LoginScreen extends StatelessWidget {
         if (userData != null) {
           isActive = userData['isActive'];
           if (isActive!) {
+            getToken();
             // If the account is active, navigate to the home screen
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const HomeScreen()));
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const HomeScreen()));
+            });
           } else {
             // If the account is not active, show a toast and sign out
             await FirebaseAuth.instance.signOut();
@@ -189,6 +193,22 @@ class LoginScreen extends StatelessWidget {
     } on Exception catch (e) {
       // Handle other exceptions
       showToast("An error occurred: $e");
+    }
+  }
+
+  Future<void> getToken() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    String? token = await messaging.getToken();
+    var res = await FirebaseFirestore.instance
+        .collection('Users')
+        .where('id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .limit(1)
+        .get();
+    if (res.docs.isNotEmpty) {
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(res.docs[0].id)
+          .update({"fcmToken": token});
     }
   }
 }

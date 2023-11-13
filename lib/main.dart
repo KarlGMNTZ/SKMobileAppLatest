@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -10,7 +9,7 @@ import 'package:sk_app/screens/auth/login_screen.dart';
 import 'package:sk_app/screens/home_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'firebase_options.dart';
-import 'package:http/http.dart' as http;
+
 // Admin User: ravivi@gmail.com
 // Admin Pass: gwapoko
 
@@ -85,27 +84,12 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  sendNotification(
-      {required String userToken,
-      required String bodymessage,
-      required String subtitle,
-      required String title}) async {
-    print(userToken);
-    var body = jsonEncode({
-      "to": userToken,
-      "notification": {
-        "body": bodymessage,
-        "title": title,
-        "subtitle": subtitle,
-      }
-    });
-    await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-        headers: {
-          "Authorization":
-              "key=AAAAgA2op94:APA91bHTvzBNOLkTDDlV6wKqFsjHg7At0-jIv61Mo--t_jk8a-VD1vEWp20b2KZuiIHOjhNGG_PyWrjamPXXSm2I7BlPr-qr8K-KC1ShXa6Q4ow34zML5ehzBTLmbm3Rwa40JgOSPdPr",
-          "Content-Type": "application/json"
-        },
-        body: body);
+  initPermission() async {
+    if (await checkNotificationPermission() == true) {
+      await notificationSetup();
+      await onBackgroundMessage();
+      await onForegroundMessage();
+    }
   }
 
   Future<void> getToken() async {
@@ -124,6 +108,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
+  void initState() {
+    initPermission();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SK App',
@@ -138,6 +128,7 @@ class _MyAppState extends State<MyApp> {
           User? user = snapshot.data;
 
           if (user != null) {
+            getToken();
             if (user.emailVerified) {
               // User is logged in and email is verified, navigate to HomeScreen
               return const HomeScreen();
