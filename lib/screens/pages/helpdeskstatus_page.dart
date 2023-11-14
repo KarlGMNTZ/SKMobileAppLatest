@@ -117,7 +117,7 @@ class _HelpdeskStatusPageState extends State<HelpdeskStatusPage> {
             )
           : SizedBox(
               child: helpdeskList.isEmpty
-                  ? Center(
+                  ? const Center(
                       child: Text(
                         'No Helpdesk Interaction yet.',
                         style: TextStyle(fontSize: 18),

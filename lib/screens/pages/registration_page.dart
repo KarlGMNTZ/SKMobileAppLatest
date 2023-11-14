@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,10 +28,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
   late String idImageFileUrl = '';
   late String idFileFileUrl = '';
   late File idImageFile;
-  late File idFile;
+  File? idFile;
 
   final teamnameController = TextEditingController();
   final commentController = TextEditingController();
+  bool isRegistering = false;
 
   Future<void> uploadImage(BuildContext context, String inputSource) async {
     final picker = ImagePicker();
@@ -43,57 +45,59 @@ class _RegistrationPageState extends State<RegistrationPage> {
         maxWidth: 1920,
       ))!;
 
-      idImageFileName = path.basename(pickedImage.path);
-      idImageFile = File(pickedImage.path);
+      setState(() {
+        idImageFileName = path.basename(pickedImage.path);
+        idImageFile = File(pickedImage.path);
+      });
 
-      try {
-        if (!context.mounted) return;
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) => const Padding(
-            padding: EdgeInsets.only(left: 30, right: 30),
-            child: AlertDialog(
-              title: Row(
-                children: [
-                  CircularProgressIndicator(
-                    color: Colors.black,
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text(
-                    'Uploading...',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'QRegular',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
+      // try {
+      //   if (!context.mounted) return;
+      //   showDialog(
+      //     context: context,
+      //     barrierDismissible: false,
+      //     builder: (BuildContext context) => const Padding(
+      //       padding: EdgeInsets.only(left: 30, right: 30),
+      //       child: AlertDialog(
+      //         title: Row(
+      //           children: [
+      //             CircularProgressIndicator(
+      //               color: Colors.black,
+      //             ),
+      //             SizedBox(
+      //               width: 20,
+      //             ),
+      //             Text(
+      //               'Uploading...',
+      //               style: TextStyle(
+      //                 color: Colors.black,
+      //                 fontWeight: FontWeight.bold,
+      //                 fontFamily: 'QRegular',
+      //               ),
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //     ),
+      //   );
 
-        final firebaseStorageRef = firebase_storage.FirebaseStorage.instance
-            .ref('Document/$idImageFileName');
+      //   final firebaseStorageRef = firebase_storage.FirebaseStorage.instance
+      //       .ref('Document/$idImageFileName');
 
-        final uploadTask = firebaseStorageRef.putFile(idImageFile);
+      //   final uploadTask = firebaseStorageRef.putFile(idImageFile);
 
-        await uploadTask.whenComplete(() {
-          firebaseStorageRef.getDownloadURL().then((imageUrl) {
-            setState(() {
-              idImageFileUrl = imageUrl;
-            });
-            Navigator.of(context).pop();
-          });
-        });
-      } on firebase_storage.FirebaseException catch (error) {
-        if (kDebugMode) {
-          print(error);
-        }
-      }
+      //   await uploadTask.whenComplete(() {
+      //     firebaseStorageRef.getDownloadURL().then((imageUrl) {
+      //       setState(() {
+      //         idImageFileUrl = imageUrl;
+      //       });
+      //       Navigator.of(context).pop();
+      //     });
+      //   });
+      // } on firebase_storage.FirebaseException catch (error) {
+      //   if (kDebugMode) {
+      //     print(error);
+      //   }
+      // }
     } catch (err) {
       if (kDebugMode) {
         print(err);
@@ -121,56 +125,58 @@ class _RegistrationPageState extends State<RegistrationPage> {
       if (result != null) {
         pickedFile = File(result.files.single.path!);
         idFileFileName = path.basename(pickedFile.path);
-        idFile = pickedFile;
+        setState(() {
+          idFile = pickedFile;
+        });
 
-        try {
-          if (!context.mounted) return;
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) => const Padding(
-              padding: EdgeInsets.only(left: 30, right: 30),
-              child: AlertDialog(
-                title: Row(
-                  children: [
-                    CircularProgressIndicator(
-                      color: Colors.black,
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Text(
-                      'Uploading...',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'QRegular',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
+        // try {
+        //   if (!context.mounted) return;
+        //   showDialog(
+        //     context: context,
+        //     barrierDismissible: false,
+        //     builder: (BuildContext context) => const Padding(
+        //       padding: EdgeInsets.only(left: 30, right: 30),
+        //       child: AlertDialog(
+        //         title: Row(
+        //           children: [
+        //             CircularProgressIndicator(
+        //               color: Colors.black,
+        //             ),
+        //             SizedBox(
+        //               width: 20,
+        //             ),
+        //             Text(
+        //               'Uploading...',
+        //               style: TextStyle(
+        //                 color: Colors.black,
+        //                 fontWeight: FontWeight.bold,
+        //                 fontFamily: 'QRegular',
+        //               ),
+        //             ),
+        //           ],
+        //         ),
+        //       ),
+        //     ),
+        //   );
 
-          final firebaseStorageRef = firebase_storage.FirebaseStorage.instance
-              .ref('Files/$idFileFileName');
+        //   final firebaseStorageRef = firebase_storage.FirebaseStorage.instance
+        //       .ref('Files/$idFileFileName');
 
-          final uploadTask = firebaseStorageRef.putFile(idFile);
+        //   final uploadTask = firebaseStorageRef.putFile(idFile);
 
-          await uploadTask.whenComplete(() {
-            firebaseStorageRef.getDownloadURL().then((url) {
-              setState(() {
-                idFileFileUrl = url;
-              });
-              Navigator.of(context).pop();
-            });
-          });
-        } on firebase_storage.FirebaseException catch (error) {
-          if (kDebugMode) {
-            print(error);
-          }
-        }
+        //   await uploadTask.whenComplete(() {
+        //     firebaseStorageRef.getDownloadURL().then((url) {
+        //       setState(() {
+        //         idFileFileUrl = url;
+        //       });
+        //       Navigator.of(context).pop();
+        //     });
+        //   });
+        // } on firebase_storage.FirebaseException catch (error) {
+        //   if (kDebugMode) {
+        //     print(error);
+        //   }
+        // }
       }
     } catch (err) {
       if (kDebugMode) {
@@ -192,147 +198,195 @@ class _RegistrationPageState extends State<RegistrationPage> {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            Container(
-              height: 750,
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Color.fromRGBO(245, 199, 177, 100),
-              ),
-              child: Image.network(
-                'https://raw.githubusercontent.com/abuanwar072/Meditation-App/master/assets/images/undraw_pilates_gpdb.png',
-                height: 1200,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
+      body: isRegistering == true
+          ? const SizedBox(
+              child: Expanded(
+                  child: Center(
+                child: CircularProgressIndicator(),
+              )),
+            )
+          : SingleChildScrollView(
+              child: Stack(
                 children: [
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Spacer(),
-                    ],
+                  Container(
+                    height: 750,
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: Color.fromRGBO(245, 199, 177, 100),
+                    ),
+                    child: Image.network(
+                      'https://raw.githubusercontent.com/abuanwar072/Meditation-App/master/assets/images/undraw_pilates_gpdb.png',
+                      height: 1200,
+                    ),
                   ),
-                  const SizedBox(height: 20),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextFieldWidget(
-                        height: 150,
-                        maxLine: 10,
-                        label: 'Input Team Name',
-                        controller: teamnameController,
-                      ),
-                      const SizedBox(height: 30),
-                      TextFieldWidget(
-                        height: 150,
-                        maxLine: 10,
-                        label: 'Input Comments',
-                        controller: commentController,
-                      ),
-                      const SizedBox(height: 30),
-                      GestureDetector(
-                        onTap: () {
-                          uploadImage(context, 'gallery');
-                        },
-                        child: Center(
-                          child: Container(
-                            height: 50,
-                            width: 300,
-                            decoration: BoxDecoration(
-                              color: const Color.fromRGBO(216, 111, 62, 0.969),
-                              image: idImageFileName.isEmpty
-                                  ? null
-                                  : DecorationImage(
-                                      image: NetworkImage(idImageFileUrl),
-                                      fit: BoxFit.cover,
-                                    ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      children: [
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Spacer(),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextFieldWidget(
+                              height: 150,
+                              maxLine: 10,
+                              label: 'Input Team Name',
+                              controller: teamnameController,
                             ),
-                            child: const Stack(
-                              children: [
-                                Center(
-                                  child: Text(
-                                    'Upload Image Here!',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                    ),
+                            const SizedBox(height: 30),
+                            TextFieldWidget(
+                              height: 150,
+                              maxLine: 10,
+                              label: 'Input Comments',
+                              controller: commentController,
+                            ),
+                            const SizedBox(height: 30),
+                            GestureDetector(
+                              onTap: () {
+                                uploadImage(context, 'gallery');
+                              },
+                              child: Center(
+                                child: Container(
+                                  height: 50,
+                                  width: 300,
+                                  decoration: BoxDecoration(
+                                    color: const Color.fromRGBO(
+                                        216, 111, 62, 0.969),
+                                    image: idImageFileName.isEmpty
+                                        ? null
+                                        : DecorationImage(
+                                            image: FileImage(idImageFile),
+                                            fit: BoxFit.cover,
+                                          ),
+                                  ),
+                                  child: const Stack(
+                                    children: [
+                                      Center(
+                                        child: Text(
+                                          'Upload Image Here!',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            uploadFile(context, 'gallery');
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              const Color.fromRGBO(245, 199, 177, 100),
+                            const SizedBox(
+                              height: 20,
                             ),
-                          ),
-                          child: const Text(
-                            'Upload File',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
+                            Center(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  uploadFile(context, 'gallery');
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                    const Color.fromRGBO(245, 199, 177, 100),
+                                  ),
+                                ),
+                                child: Text(
+                                  idFile == null
+                                      ? 'Upload File'
+                                      : idFileFileName,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            // Add the registration to Firebase
-                            await addRegistration(
-                                idImageFileUrl,
-                                teamnameController.text,
-                                commentController.text,
-                                idFileFileUrl,
-                                widget.activityID);
-                            if (!context.mounted) return;
-                            Navigator.pop(context);
-                            showToast("Successfully Registered");
+                            Center(
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  // Add the registration to Firebase
+                                  setState(() {
+                                    isRegistering = true;
+                                  });
+                                  if (idImageFileName.isNotEmpty) {
+                                    final firebaseStorageRef = firebase_storage
+                                        .FirebaseStorage.instance
+                                        .ref('Document/$idImageFileName');
 
-                            // Store the registration ID in the activities collection
-                            // final activitiesCollection = FirebaseFirestore
-                            //     .instance
-                            //     .collection('Activities');
+                                    final uploadTask =
+                                        firebaseStorageRef.putFile(idImageFile);
 
-                            // await activitiesCollection.doc('id').update({
-                            //   'regId': FieldValue.arrayUnion([registrationId]),
-                            // });
+                                    await uploadTask.whenComplete(() {
+                                      firebaseStorageRef
+                                          .getDownloadURL()
+                                          .then((imageUrl) {
+                                        setState(() {
+                                          idImageFileUrl = imageUrl;
+                                          log("imageUrl: $imageUrl");
+                                        });
+                                      });
+                                    });
+                                  }
+                                  if (idFile != null) {
+                                    final firebaseStorageRef = firebase_storage
+                                        .FirebaseStorage.instance
+                                        .ref('Files/$idFileFileName');
 
-                            // Navigate back to the first page of the application
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              const Color.fromRGBO(245, 199, 177, 100),
+                                    final uploadTask =
+                                        firebaseStorageRef.putFile(idFile!);
+
+                                    final snapshot =
+                                        await uploadTask.whenComplete(() {});
+                                    idFileFileUrl =
+                                        await snapshot.ref.getDownloadURL();
+                                  }
+                                  await addRegistration(
+                                      idImageFileUrl,
+                                      teamnameController.text,
+                                      commentController.text,
+                                      idFileFileUrl,
+                                      widget.activityID);
+
+                                  if (!context.mounted) return;
+                                  Navigator.pop(context);
+                                  showToast("Successfully Registered");
+
+                                  // Store the registration ID in the activities collection
+                                  // final activitiesCollection = FirebaseFirestore
+                                  //     .instance
+                                  //     .collection('Activities');
+
+                                  // await activitiesCollection.doc('id').update({
+                                  //   'regId': FieldValue.arrayUnion([registrationId]),
+                                  // });
+
+                                  // Navigate back to the first page of the application
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                    const Color.fromRGBO(245, 199, 177, 100),
+                                  ),
+                                ),
+                                child: const TextWidget(
+                                  text: 'Submit',
+                                  fontSize: 14,
+                                ),
+                              ),
                             ),
-                          ),
-                          child: const TextWidget(
-                            text: 'Submit',
-                            fontSize: 14,
-                          ),
+                          ],
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 }

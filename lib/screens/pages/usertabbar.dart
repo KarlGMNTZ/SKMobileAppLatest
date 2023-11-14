@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:sk_app/screens/pages/crowdsourcingstatus_page.dart';
 import 'package:sk_app/screens/pages/crowsourcingdetails_page.dart';
 import 'package:sk_app/screens/pages/helpdeskstatus_page.dart';
+import 'package:sk_app/screens/pages/user_activities_evaluated.dart';
+import 'package:sk_app/screens/pages/user_activities_joined.dart';
+import 'package:sk_app/screens/pages/user_helpdesk_submitted.dart';
 
 class UsertabView extends StatefulWidget {
   const UsertabView({super.key});
@@ -39,7 +42,9 @@ class _UsertabViewState extends State<UsertabView> {
         ),
         body: const TabBarView(
           children: [
-            HelpdeskStatusPage(),
+            ActivitiesJoined(),
+            HelpDeskSubmitted(),
+            ActivitiesEvaluated(),
           ],
         ),
       ),

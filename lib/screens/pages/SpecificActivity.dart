@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sk_app/screens/pages/registration_page.dart';
+import 'package:sk_app/widgets/toast_widget.dart';
 
 class SpecificActivity extends StatefulWidget {
   final String activityName;
@@ -20,6 +23,23 @@ class SpecificActivity extends StatefulWidget {
 }
 
 class _SpecificActivityState extends State<SpecificActivity> {
+  checkIfAlreadyRegistered() async {
+    var res = await FirebaseFirestore.instance
+        .collection('Registration')
+        .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('activityID', isEqualTo: widget.activityID)
+        .get();
+    if (res.docs.isEmpty) {
+      if (!context.mounted) return;
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => RegistrationPage(
+                activityID: widget.activityID,
+              )));
+    } else {
+      showToast("Already registered! Thank you.");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,10 +66,7 @@ class _SpecificActivityState extends State<SpecificActivity> {
               const SizedBox(height: 120), // Add spacing for the button
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => RegistrationPage(
-                            activityID: widget.activityID,
-                          )));
+                  checkIfAlreadyRegistered();
                 },
                 child: const Text('Register'),
               ),

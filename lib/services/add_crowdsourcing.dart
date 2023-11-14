@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
-import 'add_notif.dart';
+// import 'add_notif.dart';
 
 Future<void> addCrowdsourcing(imageUrl, name, description, List<String> options,
     context, validDays) async {
@@ -41,8 +41,8 @@ Future<void> addCrowdsourcing(imageUrl, name, description, List<String> options,
     'likes': [], // Initialize the likes array as empty
   };
 
-  addNotif('New Crowdsourcing: $name');
-  sendNotification(bodymessage: name, subtitle: "", title: "New Crowdsourcing");
+  // addNotif('New Crowdsourcing: $name');
+  // sendNotification(bodymessage: name, subtitle: "", title: "New Crowdsourcing");a
   await docUser.set(json);
 }
 

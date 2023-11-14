@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -624,23 +625,50 @@ class _CroudsourcingPageState extends State<CroudsourcingPage> {
                                       votes1: [],
                                     ),
                                     onPressed: () async {
-                                      addUserActivity(
-                                          activity:
-                                              "Voted in the crowd source ${data.docs[index]['name']}");
-                                      _voteForOption(
-                                          index, index1, data.docs[index]);
-                                      await FirebaseFirestore.instance
-                                          .collection('Crowdsourcing')
-                                          .doc(data.docs[index].id)
-                                          .update({
-                                        data.docs[index]['options'][index1]
-                                            ['votes1']: [
-                                          ...data.docs[index]['options'][index1]
-                                              ['votes1'],
-                                          FirebaseAuth
-                                              .instance.currentUser!.uid,
-                                        ],
-                                      });
+                                      bool isExist = false;
+                                      for (var i = 0;
+                                          i <
+                                              data.docs[index]['options']
+                                                  .length;
+                                          i++) {
+                                        for (var x = 0;
+                                            x <
+                                                data
+                                                    .docs[index]['options'][i]
+                                                        ['votes1']
+                                                    .length;
+                                            x++) {
+                                          if (data.docs[index]['options'][i]
+                                                  ['votes1'][x] ==
+                                              FirebaseAuth
+                                                  .instance.currentUser!.uid) {
+                                            isExist = true;
+                                          }
+                                        }
+                                      }
+
+                                      if (isExist == false) {
+                                        addUserActivity(
+                                            activity:
+                                                "Voted in the crowd source ${data.docs[index]['name']}");
+                                        _voteForOption(
+                                            index, index1, data.docs[index]);
+                                        await FirebaseFirestore.instance
+                                            .collection('Crowdsourcing')
+                                            .doc(data.docs[index].id)
+                                            .update({
+                                          data.docs[index]['options'][index1]
+                                              ['votes1']: [
+                                            ...data.docs[index]['options']
+                                                [index1]['votes1'],
+                                            FirebaseAuth
+                                                .instance.currentUser!.uid,
+                                          ],
+                                        });
+                                      } else {
+                                        showToast(
+                                            "Please remove your existing vote. Thank you");
+                                      }
                                     },
                                   );
                                 },
@@ -924,7 +952,7 @@ class PollOptionCard extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromRGBO(180, 146, 129, 1),
                 ),
-                child: const Text('Change Vote'),
+                child: const Text('Remove Vote'),
               )
             : ElevatedButton(
                 onPressed: onPressed,

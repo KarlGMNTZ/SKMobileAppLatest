@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,6 +14,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:path/path.dart' as path;
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sk_app/screens/announcement_dialog.dart';
 import 'package:sk_app/screens/auth/login_screen.dart';
 import 'package:sk_app/screens/pages/SpecificActivity.dart';
@@ -30,6 +33,7 @@ import 'package:sk_app/utils/colors.dart';
 import 'package:sk_app/widgets/text_widget.dart';
 import 'package:sk_app/widgets/textfield_widget.dart';
 
+import '../main.dart';
 import '../widgets/instruction_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -43,10 +47,11 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   bool dialogShown = true; //dili na makita ang anncouncement
   String id = '1';
-
+  int badgeCount = 0;
   @override
   void initState() {
     super.initState();
+    getNotif();
     getUserData();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!dialogShown) {
@@ -59,6 +64,62 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       }
     });
+  }
+
+  getNotif() async {
+    var res = await FirebaseFirestore.instance.collection('Notif').get();
+    var notif = res.docs;
+    List datanotif = [];
+    for (var i = 0; i < notif.length; i++) {
+      Map mapData = notif[i].data();
+      mapData['id'] = notif[i].id;
+      mapData['dateTime'] = notif[i]['dateTime'].toDate().toString();
+      mapData['isSeen'] = false;
+      datanotif.add(mapData);
+    }
+    var encoded = jsonEncode(datanotif);
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? notifs = prefs.getString('notifs');
+    if (notifs == null) {
+      await prefs.setString('notifs', encoded);
+      badgeCount = datanotif.length;
+    } else {
+      var notifsList = jsonDecode(notifs);
+      for (var i = 0; i < datanotif.length; i++) {
+        for (var x = 0; x < notifsList.length; x++) {
+          if (datanotif[i]['id'] == notifsList[x]['id']) {
+            datanotif[i]['isSeen'] = notifsList[x]['isSeen'];
+          }
+        }
+      }
+      var encodedNewList = jsonEncode(datanotif);
+      await prefs.setString('notifs', encodedNewList);
+      final String? toprint = prefs.getString('notifs');
+      var notiflist = jsonDecode(toprint!);
+      for (var z = 0; z < notiflist.length; z++) {
+        if (notiflist[z]['isSeen'] == false) {
+          badgeCount = badgeCount + 1;
+        }
+      }
+      setState(() {});
+    }
+  }
+
+  syncNotifData({required String notifID}) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? notifs = prefs.getString('notifs');
+    var notiflist = jsonDecode(notifs!);
+    for (var x = 0; x < notiflist.length; x++) {
+      if (notiflist[x]['id'] == notifID) {
+        if (notiflist[x]['isSeen'] == false) {
+          notiflist[x]['isSeen'] = true;
+          badgeCount = badgeCount - 1;
+        }
+      }
+    }
+    var jsonEncodedNotif = jsonEncode(notiflist);
+    await prefs.setString('notifs', jsonEncodedNotif);
+    setState(() {});
   }
 
   addUserActivity({required String activity}) async {
@@ -263,64 +324,32 @@ class _HomeScreenState extends State<HomeScreen> {
                                           size: 30,
                                         ),
                                       ),
+                                      // notif icon
                                       box.read('role') != 'Admin'
                                           ? IconButton(
                                               onPressed: () async {
                                                 Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const NotifPage(),
+                                                        NotifPage(
+                                                            syncNotifData:
+                                                                syncNotifData),
                                                   ),
                                                 );
                                               },
-                                              icon:
-                                                  StreamBuilder<QuerySnapshot>(
-                                                stream: FirebaseFirestore
-                                                    .instance
-                                                    .collection('Notif')
-                                                    .snapshots(),
-                                                builder: (BuildContext context,
-                                                    AsyncSnapshot<QuerySnapshot>
-                                                        snapshot) {
-                                                  if (snapshot.hasError) {
-                                                    print(snapshot.error);
-                                                    return const Center(
-                                                        child: Text('Error'));
-                                                  }
-                                                  if (snapshot
-                                                          .connectionState ==
-                                                      ConnectionState.waiting) {
-                                                    return const Padding(
-                                                      padding: EdgeInsets.only(
-                                                          top: 50),
-                                                      child: Center(
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                          color: Colors.indigo,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-
-                                                  final data =
-                                                      snapshot.requireData;
-                                                  return Badge(
-                                                    label: TextWidget(
-                                                      text: data.docs.length
-                                                          .toString(),
-                                                      color: Colors.white,
-                                                      fontSize: 12,
-                                                    ),
-                                                    child: const Icon(
-                                                      Icons.notifications,
-                                                      size: 30,
-                                                      color: Color.fromARGB(
-                                                          239, 185, 144, 124),
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            )
+                                              icon: Badge(
+                                                label: TextWidget(
+                                                  text: badgeCount.toString(),
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                ),
+                                                child: const Icon(
+                                                  Icons.notifications,
+                                                  size: 30,
+                                                  color: Color.fromARGB(
+                                                      239, 185, 144, 124),
+                                                ),
+                                              ))
                                           : const SizedBox(),
                                       IconButton(
                                         onPressed: () {

@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sk_app/screens/pages/evaluation_page.dart';
+import 'package:sk_app/widgets/toast_widget.dart';
 
 class EvaluateActivities extends StatefulWidget {
   const EvaluateActivities({super.key});
@@ -34,24 +37,46 @@ class _EvaluateActivitiesState extends State<EvaluateActivities> {
     isLoading = true;
     try {
       var res = await FirebaseFirestore.instance
-          .collection('Activities')
-          .where('expirationDate', isLessThan: Timestamp.now())
+          .collection('Registration')
+          .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
-      var activities = res.docs;
+      var registration = res.docs;
       List tempData = [];
-      for (var i = 0; i < activities.length; i++) {
-        Map mapdata = activities[i].data();
-        mapdata['id'] = activities[i].id;
-        mapdata['dateTime'] = mapdata['dateTime'].toDate().toString();
-        mapdata['expirationDate'] =
-            mapdata['expirationDate'].toDate().toString();
-        tempData.add(mapdata);
+      for (var i = 0; i < registration.length; i++) {
+        Map mapdata = registration[i].data();
+        var activityDocRef = mapdata['activityDocRef'] as DocumentReference;
+        var snapshot = await activityDocRef.get();
+        var activityObject = snapshot.data() as Map;
+        log(activityObject.toString());
+        activityObject['id'] = activityDocRef.id;
+        activityObject['dateTime'] =
+            activityObject['dateTime'].toDate().toString();
+        tempData.add(activityObject);
       }
       setState(() {
         activitiesList = tempData;
       });
     } on Exception catch (_) {}
     isLoading = false;
+  }
+
+  checkIfAlreadyEvaluated(
+      {required String activityID, required String activityName}) async {
+    var res = await FirebaseFirestore.instance
+        .collection('Evaluation')
+        .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .where('activityID', isEqualTo: activityID)
+        .get();
+    if (res.docs.isEmpty) {
+      if (!context.mounted) return;
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => EvaluationPage(
+                  activityName: activityName, activityID: activityID)));
+    } else {
+      showToast("Activity already evaluated");
+    }
   }
 
   @override
@@ -101,15 +126,9 @@ class _EvaluateActivitiesState extends State<EvaluateActivities> {
                               top: height(value: 2)),
                           child: InkWell(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EvaluationPage(
-                                        activityName: activitiesList[index]
-                                            ['name'],
-                                        activityID: activitiesList[index]
-                                            ['id'])),
-                              );
+                              checkIfAlreadyEvaluated(
+                                  activityID: activitiesList[index]['id'],
+                                  activityName: activitiesList[index]['name']);
                             },
                             child: Column(
                               children: [
@@ -148,6 +167,7 @@ class _EvaluateActivitiesState extends State<EvaluateActivities> {
                                           Text(
                                             activitiesList[index]
                                                 ['description'],
+                                            overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                                 fontWeight: FontWeight.normal,
                                                 fontSize: fontSize(value: 3),

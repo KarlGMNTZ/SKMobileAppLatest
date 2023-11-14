@@ -1,11 +1,16 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sk_app/main.dart';
 
 import '../../widgets/text_widget.dart';
 
 class NotifPage extends StatefulWidget {
-  const NotifPage({Key? key}) : super(key: key);
+  const NotifPage({Key? key, required this.syncNotifData}) : super(key: key);
+  final Function syncNotifData;
 
   @override
   State<NotifPage> createState() => _NotifPageState();
@@ -17,28 +22,28 @@ class _NotifPageState extends State<NotifPage> {
     super.initState();
 
     // Schedule the deletion after 5 seconds
-    Future.delayed(const Duration(seconds: 1), () {
-      deleteExpiredDocuments();
-    });
+    // Future.delayed(const Duration(seconds: 1), () {
+    //   deleteExpiredDocuments();
+    // });
   }
 
-  void deleteExpiredDocuments() {
-    DateTime now = DateTime.now();
-    DateTime fiveSecondsAgo = now.subtract(const Duration(days: 1));
+  // void deleteExpiredDocuments() {
+  //   DateTime now = DateTime.now();
+  //   DateTime fiveSecondsAgo = now.subtract(const Duration(days: 1));
 
-    FirebaseFirestore.instance
-        .collection('Notif')
-        .where('dateTime', isLessThan: fiveSecondsAgo)
-        .get()
-        .then((snapshot) {
-      for (DocumentSnapshot doc in snapshot.docs) {
-        doc.reference.delete();
-      }
-    });
+  //   FirebaseFirestore.instance
+  //       .collection('Notif')
+  //       .where('dateTime', isLessThan: fiveSecondsAgo)
+  //       .get()
+  //       .then((snapshot) {
+  //     for (DocumentSnapshot doc in snapshot.docs) {
+  //       doc.reference.delete();
+  //     }
+  //   });
 
-    // Optionally, you can trigger a rebuild of the widget after deletion
-    // setState(() {});
-  }
+  //   // Optionally, you can trigger a rebuild of the widget after deletion
+  //   // setState(() {});
+  // }
 
   void _showNotificationDialog(String name, Timestamp dateTime) {
     showDialog(
@@ -108,6 +113,7 @@ class _NotifPageState extends State<NotifPage> {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
+                  widget.syncNotifData(notifID: data.docs[index].id);
                   _showNotificationDialog(
                       data.docs[index]['name'], data.docs[index]['dateTime']);
                 },
