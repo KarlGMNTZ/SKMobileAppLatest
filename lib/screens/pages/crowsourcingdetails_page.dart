@@ -101,121 +101,130 @@ class _CrowSourcingDetailsPageState extends State<CrowSourcingDetailsPage> {
                 ),
               ),
             )
-          : SizedBox(
-              child: ListView.builder(
-                itemCount: crowsourceList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.only(left: 15, right: 15, top: 15),
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        color: Colors.white,
-                        boxShadow: const [
-                          BoxShadow(
-                              color: Colors.grey,
-                              blurRadius: 5,
-                              spreadRadius: 3,
-                              offset: Offset(1, 2))
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const TextWidget(
-                                text: 'Name: ',
-                                isBold: true,
-                                fontSize: 16,
-                              ),
-                              TextWidget(
-                                text: crowsourceList[index].name,
-                                fontSize: 16,
-                                isBold: true,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            children: [
-                              const TextWidget(
-                                text: 'Suggested by: ',
-                                fontSize: 14,
-                              ),
-                              TextWidget(
-                                text:
-                                    "${crowsourceList[index].userDetails?.fname} ${crowsourceList[index].userDetails?.lname}",
-                                fontSize: 14,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const TextWidget(
-                                text: 'Date Created: ',
-                                fontSize: 14,
-                              ),
-                              TextWidget(
-                                text:
-                                    "${DateFormat.yMMMd().format(crowsourceList[index].dateTime)} ${DateFormat.jm().format(crowsourceList[index].dateTime)}",
-                                fontSize: 14,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          const TextWidget(
-                            text: 'Current Result ',
-                            isBold: true,
-                            fontSize: 16,
-                          ),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: crowsourceList[index].options.length,
-                            itemBuilder:
-                                (BuildContext context, int optionIndex) {
-                              return Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Row(
-                                  children: [
-                                    TextWidget(
-                                      text: crowsourceList[index]
-                                          .options[optionIndex]
-                                          .text,
-                                      fontSize: 14,
-                                    ),
-                                    const TextWidget(
-                                      isBold: true,
-                                      text: "  -  ",
-                                      fontSize: 14,
-                                    ),
-                                    TextWidget(
-                                      text: crowsourceList[index]
-                                          .options[optionIndex]
-                                          .votes1
-                                          .length
-                                          .toString(),
-                                      fontSize: 14,
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
+          : crowsourceList.isEmpty
+              ? const SizedBox(
+                  child: Center(
+                    child: TextWidget(
+                      text: "No available data",
+                      fontSize: 15,
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
+                )
+              : SizedBox(
+                  child: ListView.builder(
+                    itemCount: crowsourceList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding:
+                            const EdgeInsets.only(left: 15, right: 15, top: 15),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            color: Colors.white,
+                            boxShadow: const [
+                              BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 5,
+                                  spreadRadius: 3,
+                                  offset: Offset(1, 2))
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const TextWidget(
+                                    text: 'Name: ',
+                                    isBold: true,
+                                    fontSize: 16,
+                                  ),
+                                  TextWidget(
+                                    text: crowsourceList[index].name,
+                                    fontSize: 16,
+                                    isBold: true,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                children: [
+                                  const TextWidget(
+                                    text: 'Suggested by: ',
+                                    fontSize: 14,
+                                  ),
+                                  TextWidget(
+                                    text:
+                                        "${crowsourceList[index].userDetails?.fname} ${crowsourceList[index].userDetails?.lname}",
+                                    fontSize: 14,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const TextWidget(
+                                    text: 'Date Created: ',
+                                    fontSize: 14,
+                                  ),
+                                  TextWidget(
+                                    text:
+                                        "${DateFormat.yMMMd().format(crowsourceList[index].dateTime)} ${DateFormat.jm().format(crowsourceList[index].dateTime)}",
+                                    fontSize: 14,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              const TextWidget(
+                                text: 'Current Result ',
+                                isBold: true,
+                                fontSize: 16,
+                              ),
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: crowsourceList[index].options.length,
+                                itemBuilder:
+                                    (BuildContext context, int optionIndex) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Row(
+                                      children: [
+                                        TextWidget(
+                                          text: crowsourceList[index]
+                                              .options[optionIndex]
+                                              .text,
+                                          fontSize: 14,
+                                        ),
+                                        const TextWidget(
+                                          isBold: true,
+                                          text: "  -  ",
+                                          fontSize: 14,
+                                        ),
+                                        TextWidget(
+                                          text: crowsourceList[index]
+                                              .options[optionIndex]
+                                              .votes1
+                                              .length
+                                              .toString(),
+                                          fontSize: 14,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
     );
   }
 }

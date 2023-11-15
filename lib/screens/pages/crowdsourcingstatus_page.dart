@@ -51,6 +51,8 @@ class _CrowSourcingStatusPageState extends State<CrowSourcingStatusPage> {
     try {
       listener = streamChats!.listen((event) async {
         print('Received data from Firebase: $event');
+        print('length: ${event.docs.length}');
+
         List data = [];
         for (var crowdsource in event.docs) {
           Map mapData = crowdsource.data();
@@ -70,10 +72,9 @@ class _CrowSourcingStatusPageState extends State<CrowSourcingStatusPage> {
           crowsourceList = crowdSourceFromJson(encodedData);
           isLoading = false;
         });
-        // chatList.assignAll(chatsFromJson(encodedData));
       });
     } catch (_) {
-      log(_.toString());
+      log("ERROR$_");
     }
   }
 
@@ -102,83 +103,95 @@ class _CrowSourcingStatusPageState extends State<CrowSourcingStatusPage> {
                 ),
               ),
             )
-          : SizedBox(
-              child: ListView.builder(
-                itemCount: crowsourceList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.only(left: 15, right: 15, top: 15),
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        color: Colors.white,
-                        boxShadow: const [
-                          BoxShadow(
-                              color: Colors.grey,
-                              blurRadius: 5,
-                              spreadRadius: 3,
-                              offset: Offset(1, 2))
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const TextWidget(
-                                text: 'Name: ',
-                                isBold: true,
-                                fontSize: 16,
-                              ),
-                              TextWidget(
-                                text: crowsourceList[index].name,
-                                fontSize: 16,
-                                isBold: true,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const TextWidget(
-                                text: 'Date Created: ',
-                                fontSize: 14,
-                              ),
-                              TextWidget(
-                                text:
-                                    "${DateFormat.yMMMd().format(crowsourceList[index].dateTime)} ${DateFormat.jm().format(crowsourceList[index].dateTime)}",
-                                fontSize: 14,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            children: [
-                              const TextWidget(
-                                text: 'Status ',
-                                fontSize: 14,
-                              ),
-                              TextWidget(
-                                text: crowsourceList[index].isApprove == true
-                                    ? "Approved"
-                                    : "Pending",
-                                fontSize: 14,
-                                color: crowsourceList[index].isApprove == true
-                                    ? Colors.green
-                                    : Colors.red,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+          : crowsourceList.isEmpty
+              ? const SizedBox(
+                  child: Center(
+                    child: TextWidget(
+                      text: "No available data",
+                      fontSize: 15,
                     ),
-                  );
-                },
-              ),
-            ),
+                  ),
+                )
+              : SizedBox(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: crowsourceList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding:
+                            const EdgeInsets.only(left: 15, right: 15, top: 15),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            color: Colors.white,
+                            boxShadow: const [
+                              BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 5,
+                                  spreadRadius: 3,
+                                  offset: Offset(1, 2))
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const TextWidget(
+                                    text: 'Name: ',
+                                    isBold: true,
+                                    fontSize: 16,
+                                  ),
+                                  TextWidget(
+                                    text: crowsourceList[index].name,
+                                    fontSize: 16,
+                                    isBold: true,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const TextWidget(
+                                    text: 'Date Created: ',
+                                    fontSize: 14,
+                                  ),
+                                  TextWidget(
+                                    text:
+                                        "${DateFormat.yMMMd().format(crowsourceList[index].dateTime)} ${DateFormat.jm().format(crowsourceList[index].dateTime)}",
+                                    fontSize: 14,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                children: [
+                                  const TextWidget(
+                                    text: 'Status ',
+                                    fontSize: 14,
+                                  ),
+                                  TextWidget(
+                                    text:
+                                        crowsourceList[index].isApprove == true
+                                            ? "Approved"
+                                            : "Pending",
+                                    fontSize: 14,
+                                    color:
+                                        crowsourceList[index].isApprove == true
+                                            ? Colors.green
+                                            : Colors.red,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
     );
   }
 }

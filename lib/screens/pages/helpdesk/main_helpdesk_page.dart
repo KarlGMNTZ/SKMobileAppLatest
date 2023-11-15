@@ -189,6 +189,7 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController concernController = TextEditingController();
+  TextEditingController titleController = TextEditingController();
 
   @override
   void initState() {
@@ -331,15 +332,22 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextFieldWidget(
+                        height: 50,
+                        label: 'Title',
+                        controller: titleController,
+                      ),
+                      const SizedBox(height: 30),
+                      TextFieldWidget(
                         height: 150,
                         maxLine: 10,
                         label: 'Input your concern',
                         controller: concernController,
                       ),
                       const SizedBox(height: 30),
-                      Text(
+
+                      const Text(
                           'If you have images to upload and file please tap the upload image and upload file'),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
 
@@ -353,13 +361,14 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                             const Color.fromRGBO(245, 199, 177, 100),
                           ),
                           fixedSize: MaterialStateProperty.all<Size>(
-                            Size(150, 40), // Set your desired width and height
+                            const Size(
+                                150, 40), // Set your desired width and height
                           ), // Set your desired color
                         ),
-                        child: Column(
+                        child: const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text(
+                            Text(
                               'Upload Image',
                               style: TextStyle(
                                 fontSize: 16,
@@ -379,7 +388,7 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                           color: Colors.black,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: () {
                           uploadFile(context,
@@ -390,7 +399,8 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                             const Color.fromRGBO(245, 199, 177, 100),
                           ), // Set your desired color
                           fixedSize: MaterialStateProperty.all<Size>(
-                            Size(150, 40), // Set your desired width and height
+                            const Size(
+                                150, 40), // Set your desired width and height
                           ),
                         ),
                         child: const Text(
@@ -411,13 +421,13 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                           color: Colors.black,
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Center(
                         child: ElevatedButton(
                           onPressed: () {
                             // Submit the concern and image here
                             addHelpdesk(idImageFileUrl, concernController.text,
-                                idFileFileUrl);
+                                idFileFileUrl, titleController.text);
 
                             // Navigate back to the main home screen
                             Navigator.of(context)
@@ -428,7 +438,7 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                               const Color.fromRGBO(245, 199, 177, 100),
                             ),
                             fixedSize: MaterialStateProperty.all<Size>(
-                              Size(
+                              const Size(
                                   150, 40), // Set your desired width and height
                             ), // Set your desired color
                           ),

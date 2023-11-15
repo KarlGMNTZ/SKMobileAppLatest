@@ -32,7 +32,6 @@ import 'package:sk_app/services/add_activities.dart';
 import 'package:sk_app/utils/colors.dart';
 import 'package:sk_app/widgets/text_widget.dart';
 import 'package:sk_app/widgets/textfield_widget.dart';
-
 import '../main.dart';
 import '../widgets/instruction_dialog.dart';
 

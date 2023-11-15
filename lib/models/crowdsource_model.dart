@@ -13,7 +13,6 @@ String crowdSourceToJson(List<CrowdSource> data) =>
 class CrowdSource {
   DateTime dateTime;
   List<dynamic> crowdSourceNew;
-  int daysValid;
   List<Comment> comments;
   String description;
   String userId;
@@ -28,7 +27,6 @@ class CrowdSource {
   CrowdSource({
     required this.dateTime,
     required this.crowdSourceNew,
-    required this.daysValid,
     required this.comments,
     required this.description,
     required this.userId,
@@ -44,7 +42,6 @@ class CrowdSource {
   factory CrowdSource.fromJson(Map<String, dynamic> json) => CrowdSource(
         dateTime: DateTime.parse(json["dateTime"]),
         crowdSourceNew: List<dynamic>.from(json["new"].map((x) => x)),
-        daysValid: json["daysValid"],
         comments: List<Comment>.from(
             json["comments"].map((x) => Comment.fromJson(x))),
         description: json["description"],
@@ -64,7 +61,6 @@ class CrowdSource {
   Map<String, dynamic> toJson() => {
         "dateTime": dateTime.toIso8601String(),
         "new": List<dynamic>.from(crowdSourceNew.map((x) => x)),
-        "daysValid": daysValid,
         "comments": List<dynamic>.from(comments.map((x) => x.toJson())),
         "description": description,
         "userId": userId,

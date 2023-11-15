@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../widgets/text_widget.dart';
+
 class ActivitiesJoined extends StatefulWidget {
   const ActivitiesJoined({super.key});
 
@@ -34,14 +36,18 @@ class _ActivitiesJoinedState extends State<ActivitiesJoined> {
         var activityDocumentRef =
             await mapdata['activityDocRef'] as DocumentReference;
         var activitysnapshot = await activityDocumentRef.get();
-        Map activities = activitysnapshot.data() as Map;
-        activities['id'] = activitysnapshot.id;
-        activities['dateTime'] = activities['dateTime'].toDate().toString();
-        activities.remove('regId');
-        data.add(activities);
+
+        if (activitysnapshot.data() != null) {
+          Map activities = activitysnapshot.data() as Map;
+          activities['id'] = activitysnapshot.id;
+          activities['dateTime'] = activities['dateTime'].toDate().toString();
+          activities.remove('regId');
+          data.add(activities);
+        }
       }
       setState(() {
         activitiesJoinedList = data;
+        isLoading = false;
       });
     }
   }
@@ -67,76 +73,99 @@ class _ActivitiesJoinedState extends State<ActivitiesJoined> {
         onRefresh: () async {
           getActivitiesJoined();
         },
-        child: SizedBox(
-          child: Padding(
-            padding: EdgeInsets.only(top: height(value: 3)),
-            child: ListView.builder(
-              itemCount: activitiesJoinedList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: EdgeInsets.only(top: height(value: 1)),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            height: height(value: 13),
-                            width: width(value: 25),
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                        activitiesJoinedList[index]
-                                            ['imageUrl']))),
-                          ),
-                          SizedBox(
-                            width: width(value: 2),
-                          ),
-                          Expanded(
-                            child: SizedBox(
-                              height: height(value: 13),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    activitiesJoinedList[index]['name'],
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: "Regular",
-                                        fontSize: 13),
-                                  ),
-                                  Text(
-                                    activitiesJoinedList[index]['description'],
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontFamily: "Regular",
-                                        color: Colors.grey,
-                                        fontSize: 9),
-                                  ),
-                                  Text(
-                                    DateFormat.yMMMEd().format(DateTime.parse(
-                                        activitiesJoinedList[index]['date'])),
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontFamily: "Regular",
-                                        color: Colors.grey,
-                                        fontSize: 9),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      const Divider()
-                    ],
+        child: isLoading
+            ? const SizedBox(
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: Color.fromARGB(255, 247, 218, 202),
                   ),
-                );
-              },
-            ),
-          ),
-        ),
+                ),
+              )
+            : activitiesJoinedList.isEmpty
+                ? const SizedBox(
+                    child: Center(
+                      child: TextWidget(
+                        text: "No available data",
+                        fontSize: 15,
+                      ),
+                    ),
+                  )
+                : SizedBox(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: height(value: 3)),
+                      child: ListView.builder(
+                        itemCount: activitiesJoinedList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                            padding: EdgeInsets.only(top: height(value: 1)),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      height: height(value: 13),
+                                      width: width(value: 25),
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: NetworkImage(
+                                                  activitiesJoinedList[index]
+                                                      ['imageUrl']))),
+                                    ),
+                                    SizedBox(
+                                      width: width(value: 2),
+                                    ),
+                                    Expanded(
+                                      child: SizedBox(
+                                        height: height(value: 13),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              activitiesJoinedList[index]
+                                                  ['name'],
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: "Regular",
+                                                  fontSize: 13),
+                                            ),
+                                            Text(
+                                              activitiesJoinedList[index]
+                                                  ['description'],
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.normal,
+                                                  fontFamily: "Regular",
+                                                  color: Colors.grey,
+                                                  fontSize: 9),
+                                            ),
+                                            Text(
+                                              DateFormat.yMMMEd().format(
+                                                  DateTime.parse(
+                                                      activitiesJoinedList[
+                                                          index]['date'])),
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.normal,
+                                                  fontFamily: "Regular",
+                                                  color: Colors.grey,
+                                                  fontSize: 9),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                const Divider()
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
       ),
     );
   }
