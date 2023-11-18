@@ -42,21 +42,36 @@ class _EvaluateActivitiesState extends State<EvaluateActivities> {
           .get();
       var registration = res.docs;
       List tempData = [];
+      DateTime now = DateTime.now();
+
       for (var i = 0; i < registration.length; i++) {
         Map mapdata = registration[i].data();
         var activityDocRef = mapdata['activityDocRef'] as DocumentReference;
         var snapshot = await activityDocRef.get();
         var activityObject = snapshot.data() as Map;
-        log(activityObject.toString());
-        activityObject['id'] = activityDocRef.id;
-        activityObject['dateTime'] =
-            activityObject['dateTime'].toDate().toString();
-        tempData.add(activityObject);
+
+        DateTime expirationDate =
+            activityObject['expirationDate'].toDate(); // Convert to DateTime
+
+        // Check if the activity is expired today or earlier
+        if (now.isAfter(expirationDate) ||
+            now.isAtSameMomentAs(expirationDate)) {
+          // Include the activity starting from tomorrow
+          if (now.add(Duration(days: 1)).isAfter(expirationDate)) {
+            activityObject['id'] = activityDocRef.id;
+            activityObject['expirationDate'] = expirationDate.toString();
+            tempData.add(activityObject);
+          }
+        }
       }
+
       setState(() {
         activitiesList = tempData;
       });
-    } on Exception catch (_) {}
+    } on Exception catch (_) {
+      // Handle exceptions
+    }
+
     isLoading = false;
   }
 
@@ -177,7 +192,7 @@ class _EvaluateActivitiesState extends State<EvaluateActivities> {
                                             height: height(value: .01),
                                           ),
                                           Text(
-                                            "${DateFormat.yMMMd().format(DateTime.parse(activitiesList[index]['dateTime']))} ${DateFormat.jm().format(DateTime.parse(activitiesList[index]['dateTime']))}",
+                                            "${DateFormat.yMMMd().format(DateTime.parse(activitiesList[index]['expirationDate']))} ${DateFormat.jm().format(DateTime.parse(activitiesList[index]['expirationDate']))}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.normal,
                                                 fontSize: fontSize(value: 3),

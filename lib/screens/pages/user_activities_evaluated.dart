@@ -57,36 +57,39 @@ class _ActivitiesEvaluatedState extends State<ActivitiesEvaluated> {
           fontFamily: 'Bold',
         ),
         content: SizedBox(
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: evaluationOutput.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      evaluationOutput[index]['question'],
-                      style:
-                          const TextStyle(fontSize: 11, fontFamily: "Regular"),
-                    ),
-                    Row(
-                      children: [
-                        const TextWidget(
-                          text: "Answer ",
-                          fontSize: 11,
-                          isBold: true,
-                        ),
-                        TextWidget(
-                            text: evaluationOutput[index]['answer'],
-                            fontSize: 11),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            },
+          width: double.maxFinite,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: evaluationOutput.map((item) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item['question'],
+                        style: const TextStyle(
+                            fontSize: 11, fontFamily: "Regular"),
+                      ),
+                      Row(
+                        children: [
+                          const TextWidget(
+                            text: "Answer ",
+                            fontSize: 11,
+                            isBold: true,
+                          ),
+                          TextWidget(
+                            text: item['answer'],
+                            fontSize: 11,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
           ),
         ),
         actions: [

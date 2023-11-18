@@ -145,7 +145,7 @@ class _ActivitiesJoinedState extends State<ActivitiesJoined> {
                                               DateFormat.yMMMEd().format(
                                                   DateTime.parse(
                                                       activitiesJoinedList[
-                                                          index]['date'])),
+                                                          index]['dateTime'])),
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.normal,
                                                   fontFamily: "Regular",
