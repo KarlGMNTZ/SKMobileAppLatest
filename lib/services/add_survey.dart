@@ -16,7 +16,7 @@ Future addSurvey(name, description, link, Timestamp timestamp,
     'name': name,
     'description': description,
     'dateTime': currentTime,
-    'expirationDate': Timestamp.fromDate(oneDayFromNow),
+    'expirationDate': expirationDate,
     'id': docUser.id,
     'userId': FirebaseAuth.instance.currentUser!.uid,
     'response': []

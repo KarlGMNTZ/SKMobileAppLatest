@@ -254,175 +254,144 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildBody() {
     return hasLoaded
-        ? Padding(
-            padding: _currentIndex == 1
-                ? EdgeInsets.zero
-                : const EdgeInsets.fromLTRB(10, 10, 10, 10),
-            child: SizedBox(
-              height: double.infinity,
-              width: double.infinity,
-              child: Padding(
-                padding: _currentIndex == 1
-                    ? EdgeInsets.zero
-                    : const EdgeInsets.fromLTRB(2, 30, 2, 0),
+        ? Scaffold(
+            appBar: _currentIndex == 1
+                ? null
+                : PreferredSize(
+                    preferredSize: Size.fromHeight(80.0),
+                    child: AppBar(
+                      primary: true,
+                      backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                      title: Text(
+                        'Hello!',
+                        style:
+                            Theme.of(context).textTheme.displaySmall?.copyWith(
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white,
+                                    ) ??
+                                TextStyle(
+                                  fontWeight: FontWeight.w200,
+                                  color: Colors.white,
+                                ),
+                      ),
+                      actions: [
+                        IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const InstructionsDialog();
+                              },
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.info,
+                            size: 30,
+                          ),
+                        ),
+                        if (box.read('role') != 'Admin')
+                          IconButton(
+                            onPressed: () async {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => NotifPage(
+                                    syncNotifData: syncNotifData,
+                                  ),
+                                ),
+                              );
+                            },
+                            icon: Badge(
+                              label: TextWidget(
+                                text: badgeCount.toString(),
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                              child: const Icon(
+                                Icons.notifications,
+                                size: 30,
+                              ),
+                            ),
+                          ),
+                        IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text(
+                                  'Logout Confirmation',
+                                  style: TextStyle(
+                                    fontFamily: 'QBold',
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                content: const Text(
+                                  'Are you sure you want to Logout?',
+                                  style: TextStyle(
+                                    fontFamily: 'QRegular',
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  MaterialButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(true),
+                                    child: const Text(
+                                      'Close',
+                                      style: TextStyle(
+                                        fontFamily: 'QRegular',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  MaterialButton(
+                                    onPressed: () async {
+                                      addUserActivity(activity: "Logout");
+                                      await FirebaseAuth.instance.signOut();
+                                      Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                          builder: (context) => LoginScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Continue',
+                                      style: TextStyle(
+                                        fontFamily: 'QRegular',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.logout,
+                            size: 30,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+            body: Padding(
+              padding: EdgeInsets.only(top: _currentIndex == 1 ? 0 : 0),
+              child: SizedBox.expand(
                 child: Stack(
                   children: [
                     Container(
                       height: 1000,
                       decoration: const BoxDecoration(
-                          color: Color.fromRGBO(245, 199, 177, 100)),
+                        color: Color.fromRGBO(245, 199, 177, 100),
+                      ),
                       child: Image.network(
                         'https://raw.githubusercontent.com/abuanwar072/Meditation-App/master/assets/images/undraw_pilates_gpdb.png',
                         height: 400,
                       ),
                     ),
                     _currentIndex == 1
-                        ? Expanded(
-                            child: _buildPage(_currentIndex),
-                          )
+                        ? _buildPage(_currentIndex)
                         : Column(
                             children: [
-                              const SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Hello!',
-                                        style: (Theme.of(context)
-                                                .textTheme
-                                                .displaySmall
-                                                ?.copyWith(
-                                                  fontWeight: FontWeight.w400,
-                                                  color: const Color.fromARGB(
-                                                      235, 38, 43, 123),
-                                                )) ??
-                                            const TextStyle(
-                                                fontWeight: FontWeight.w200,
-                                                color: Colors.indigo),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return const InstructionsDialog();
-                                            },
-                                          );
-                                        },
-                                        icon: const Icon(
-                                          Icons.info,
-                                          color: Color.fromARGB(
-                                              239, 185, 144, 124),
-                                          size: 30,
-                                        ),
-                                      ),
-                                      // notif icon
-                                      box.read('role') != 'Admin'
-                                          ? IconButton(
-                                              onPressed: () async {
-                                                Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        NotifPage(
-                                                            syncNotifData:
-                                                                syncNotifData),
-                                                  ),
-                                                );
-                                              },
-                                              icon: Badge(
-                                                label: TextWidget(
-                                                  text: badgeCount.toString(),
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                ),
-                                                child: const Icon(
-                                                  Icons.notifications,
-                                                  size: 30,
-                                                  color: Color.fromARGB(
-                                                      239, 185, 144, 124),
-                                                ),
-                                              ))
-                                          : const SizedBox(),
-                                      IconButton(
-                                        onPressed: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => AlertDialog(
-                                              title: const Text(
-                                                'Logout Confirmation',
-                                                style: TextStyle(
-                                                  fontFamily: 'QBold',
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              content: const Text(
-                                                'Are you sure you want to Logout?',
-                                                style: TextStyle(
-                                                  fontFamily: 'QRegular',
-                                                ),
-                                              ),
-                                              actions: <Widget>[
-                                                MaterialButton(
-                                                  onPressed: () =>
-                                                      Navigator.of(context)
-                                                          .pop(true),
-                                                  child: const Text(
-                                                    'Close',
-                                                    style: TextStyle(
-                                                      fontFamily: 'QRegular',
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                                MaterialButton(
-                                                  onPressed: () async {
-                                                    addUserActivity(
-                                                        activity: "Logout");
-                                                    await FirebaseAuth.instance
-                                                        .signOut();
-                                                    Navigator.of(context)
-                                                        .pushReplacement(
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            LoginScreen(),
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: const Text(
-                                                    'Continue',
-                                                    style: TextStyle(
-                                                      fontFamily: 'QRegular',
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                        icon: const Icon(
-                                          Icons.logout,
-                                          color: Color.fromARGB(
-                                              239, 185, 144, 124),
-                                          size: 30,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
+                              const SizedBox(height: 5),
                               // BODY PAGE
                               Expanded(
                                 child: _buildPage(_currentIndex),
@@ -853,9 +822,10 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       case 3:
         return GridView.count(
-          crossAxisCount: 2,
+          crossAxisCount: 1,
           crossAxisSpacing: 10.0,
           mainAxisSpacing: 10.0,
+          childAspectRatio: 2.0, // Adjust the aspect ratio as needed
           children: [
             _buildGridTile(
               context,
@@ -961,7 +931,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildGridTile(
-      BuildContext context, String title, String imageUrl, Widget page) {
+    BuildContext context,
+    String title,
+    String imageUrl,
+    Widget page,
+  ) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context)
@@ -972,17 +946,22 @@ class _HomeScreenState extends State<HomeScreen> {
           borderRadius: BorderRadius.circular(5),
         ),
         color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextWidget(
-              text: title,
-              fontSize: 17,
-              color: Colors.black,
-            ),
-            const SizedBox(height: 10),
-            Image.network(imageUrl, height: 50, width: 50),
-          ],
+        child: Container(
+          width: double.infinity, // Adjust the width as needed
+          height: 120.0, // Adjust the height as needed
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextWidget(
+                text: title,
+                fontSize: 17,
+                color: Colors.black,
+              ),
+              const SizedBox(height: 10),
+              Image.network(imageUrl, height: 50, width: 50),
+            ],
+          ),
         ),
       ),
     );

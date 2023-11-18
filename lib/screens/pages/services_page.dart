@@ -116,7 +116,10 @@ class _ServicesPageState extends State<ServicesPage> {
         centerTitle: true,
       ),
       body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection('Services').snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('Services')
+              .orderBy('dateTime', descending: true)
+              .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
@@ -135,6 +138,7 @@ class _ServicesPageState extends State<ServicesPage> {
             }
 
             final data = snapshot.requireData;
+            final currentTime = Timestamp.now();
 
             // Filter out expired services
 
@@ -143,7 +147,7 @@ class _ServicesPageState extends State<ServicesPage> {
 
               if (dataMap.containsKey('expirationDate')) {
                 final expirationDate = dataMap['expirationDate'] as Timestamp;
-                final currentTime = Timestamp.now(); // Update currentTime here
+                // Update currentTime here
 
                 // Filter out surveys that have not yet expired
                 return expirationDate.toDate().isAfter(currentTime.toDate());

@@ -8,14 +8,13 @@ Future addServices(
     imageUrl, name, description, Timestamp expirationDate) async {
   final docUser = FirebaseFirestore.instance.collection('Services').doc();
   final currentTime = DateTime.now();
-  final oneDayFromNow = currentTime.add(const Duration(days: 1));
 
   final json = {
     'imageUrl': imageUrl,
     'name': name,
     'description': description,
     'dateTime': currentTime,
-    'expirationDate': Timestamp.fromDate(oneDayFromNow),
+    'expirationDate': expirationDate,
     'id': docUser.id,
     'userId': FirebaseAuth.instance.currentUser!.uid,
   };

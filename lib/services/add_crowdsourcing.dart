@@ -21,7 +21,6 @@ Future<void> addCrowdsourcing(imageUrl, name, description, List<String> options,
   }
 
   final currentTime = DateTime.now();
-  final oneDayFromNow = currentTime.add(const Duration(days: 1));
 
   final json = {
     'options': optionObjects, // Store option objects with text and votes
@@ -31,8 +30,8 @@ Future<void> addCrowdsourcing(imageUrl, name, description, List<String> options,
     'isApprove': false,
     'description': description,
     'dateTime': currentTime,
-    'expirationDate':
-        Timestamp.fromDate(oneDayFromNow), // Added expirationDate field
+    'expirationDate': Timestamp.fromDate(
+        currentTime.add(validDays)), // Added expirationDate field
     'isArchived': false,
     'id': docUser.id,
     'userId': FirebaseAuth.instance.currentUser!.uid,
