@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sk_app/screens/auth/landing_screen.dart';
 import 'package:sk_app/screens/auth/login_screen.dart';
@@ -15,6 +16,13 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart' as path;
 import '../../widgets/toast_widget.dart';
 
+bool isValidEmail(String email) {
+  // Add your email validation logic here
+  // For a simple example, you can use a regular expression
+  final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$');
+  return emailRegex.hasMatch(email);
+}
+
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -23,6 +31,11 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  bool isFieldValid(String value) {
+    return value.isNotEmpty;
+  }
+
+  bool loading = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late String _verificationId;
 
@@ -393,15 +406,50 @@ class _SignupScreenState extends State<SignupScreen> {
             const SizedBox(
               height: 10,
             ),
-            TextFieldWidget(label: 'First Name', controller: fnameController),
+            TextFieldWidget(
+              label: 'First Name',
+              hint: 'Enter your first name',
+              controller: fnameController,
+              isRequred: true, // Indicate that this field is required
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'First Name is required';
+                }
+                return null; // Return null if the validation is successful
+              },
+            ),
             const SizedBox(
               height: 10,
             ),
-            TextFieldWidget(label: 'Middle Name', controller: mnameController),
+            TextFieldWidget(
+              label: 'Middle Name',
+              hint: 'Enter your middle name',
+              controller: mnameController,
+              isRequred: true, // Indicate that this field is required
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Middle Name is required';
+                }
+                return null; // Return null if the validation is successful
+              },
+              // Add any other properties or customization you need
+            ),
             const SizedBox(
               height: 10,
             ),
-            TextFieldWidget(label: 'Last Name', controller: lnameController),
+            TextFieldWidget(
+              label: 'Last Name',
+              hint: 'Enter your last name',
+              controller: lnameController,
+              isRequred: true, // Indicate that this field is required
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Last Name is required';
+                }
+                return null; // Return null if the validation is successful
+              },
+              // Add any other properties or customization you need
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -500,7 +548,22 @@ class _SignupScreenState extends State<SignupScreen> {
               style: const TextStyle(
                   fontSize: 16), // Adjust the font size as needed
             ),
-            TextFieldWidget(label: 'Email', controller: emailController),
+            TextFieldWidget(
+              label: 'Email',
+              hint: 'Enter your email address',
+              controller: emailController,
+              inputType:
+                  TextInputType.emailAddress, // Set the input type for email
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Email is required';
+                } else if (!isValidEmail(value)) {
+                  return 'Enter a valid email address';
+                }
+                return null; // Return null if the validation is successful
+              },
+              // Add any other properties or customization you need
+            ),
             const SizedBox(
               height: 5,
             ),
@@ -532,6 +595,10 @@ class _SignupScreenState extends State<SignupScreen> {
                     inputType: TextInputType.number,
                     label: 'Contact Number',
                     controller: contactNumberController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(
+                          10), // Limit the length to 10 digits
+                    ],
                   ),
                 ),
               ],
@@ -539,7 +606,19 @@ class _SignupScreenState extends State<SignupScreen> {
             const SizedBox(
               height: 5,
             ),
-            TextFieldWidget(label: 'Address', controller: addressController),
+            TextFieldWidget(
+              label: 'Address',
+              hint: 'Enter your address',
+              controller: addressController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Address is required';
+                }
+                // Add any additional address validation logic here if needed
+                return null; // Return null if the validation is successful
+              },
+              // Add any other properties or customization you need
+            ),
             const SizedBox(
               height: 5,
             ),
@@ -928,44 +1007,79 @@ class _SignupScreenState extends State<SignupScreen> {
               fontSize: 14,
               label: 'Upload proof of residency',
               onPressed: () async {
-                await FilePicker.platform
-                    .pickFiles(
-                  allowMultiple: false,
-                  onFileLoading: (p0) {
-                    return const CircularProgressIndicator();
-                  },
-                )
-                    .then((value) {
-                  setState(
-                    () {
-                      pickedFile = true;
-                      fileName = value!.names[0]!;
-                      imageFile = File(value.paths[0]!);
+                try {
+                  setState(() {
+                    loading =
+                        true; // Set loading to true when starting the upload
+                  });
+
+                  final FilePickerResult? result =
+                      await FilePicker.platform.pickFiles(
+                    allowMultiple: false,
+                    onFileLoading: (p0) {
+                      return const CircularProgressIndicator();
                     },
                   );
-                  return null;
-                });
 
-                await firebase_storage.FirebaseStorage.instance
-                    .ref('Files/$fileName')
-                    .putFile(imageFile);
-                fileUrl = await firebase_storage.FirebaseStorage.instance
-                    .ref('Files/$fileName')
-                    .getDownloadURL();
-                setState(() {});
+                  if (result != null) {
+                    setState(() {
+                      pickedFile = true;
+                      fileName = result.names[0]!;
+                      imageFile = File(result.paths[0]!);
+                    });
+
+                    await firebase_storage.FirebaseStorage.instance
+                        .ref('Files/$fileName')
+                        .putFile(imageFile);
+
+                    fileUrl = await firebase_storage.FirebaseStorage.instance
+                        .ref('Files/$fileName')
+                        .getDownloadURL();
+
+                    // Perform any additional logic with fileUrl if needed
+
+                    setState(() {
+                      loading =
+                          false; // Set loading to false after a successful upload
+                    });
+                  } else {
+                    // Handle the case when the user cancels the file picking
+                    setState(() {
+                      loading =
+                          false; // Set loading to false in case of cancellation
+                    });
+                  }
+                } catch (error) {
+                  // Handle any errors that might occur during the upload
+                  print('Error uploading file: $error');
+                  setState(() {
+                    loading = false; // Set loading to false in case of an error
+                  });
+                }
               },
             ),
+            if (loading) CircularProgressIndicator(),
             const SizedBox(
               height: 20,
             ),
             ElevatedButton(
               onPressed: () {
-                if (pickedFile) {
+                // Check if all required fields are filled
+                if (pickedFile &&
+                    isFieldValid(fnameController.text) &&
+                    isFieldValid(mnameController.text) &&
+                    isFieldValid(lnameController.text) &&
+                    isFieldValid(contactNumberController.text) &&
+                    isFieldValid(addressController.text)) {
+                  // All required fields are filled, proceed with the sign-up process
+
                   // First, send OTP
                   _sendOTP();
+
                   // Show dialog for OTP entry
                 } else {
-                  showToast('Upload proof of residency');
+                  showToast(
+                      'Please fill in all required fields and \nupload proof of residency');
                 }
               },
               child: const Text('Sign Up'),
