@@ -34,7 +34,7 @@ class _TabbarViewState extends State<TabbarView> {
         appBar: AppBar(
           centerTitle: true,
           title: const Text("Crowd Sourcing"),
-          backgroundColor: Color.fromARGB(255, 20, 20, 20),
+          backgroundColor: Color.fromARGB(255, 0, 0, 0),
           bottom: upperTab,
         ),
         body: const TabBarView(

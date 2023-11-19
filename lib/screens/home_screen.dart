@@ -255,9 +255,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildBody() {
     return hasLoaded
         ? Scaffold(
-            appBar: _currentIndex == 1
-                ? null
-                : PreferredSize(
+            appBar: _currentIndex == 0
+                ? PreferredSize(
                     preferredSize: Size.fromHeight(80.0),
                     child: AppBar(
                       primary: true,
@@ -371,7 +370,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                  ),
+                  )
+                : null,
             body: Padding(
               padding: EdgeInsets.only(top: _currentIndex == 1 ? 0 : 0),
               child: SizedBox.expand(
@@ -391,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ? _buildPage(_currentIndex)
                         : Column(
                             children: [
-                              const SizedBox(height: 5),
+                              const SizedBox(height: 0),
                               // BODY PAGE
                               Expanded(
                                 child: _buildPage(_currentIndex),
@@ -805,49 +805,70 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         return const TabbarView();
       case 2:
-        return GridView.count(
-          crossAxisCount: 1,
-          crossAxisSpacing: 10.0,
-          mainAxisSpacing: 10.0,
-          children: [
-            _buildGridTile(
-              context,
-              'Activities',
-              'https://cdn-icons-png.flaticon.com/512/6192/6192771.png',
-              const ActivitiesPage(),
-            ),
+        return Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 80.0,
+            title: Text('Discover Activities'),
+            backgroundColor: Colors.black, // Set the title as needed
+            // Add any other app bar configuration you need
+          ),
+          backgroundColor: Color.fromRGBO(245, 199, 177, 100),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: _buildGridTile(
+                  context,
+                  'Activities',
+                  'https://cdn-icons-png.flaticon.com/512/6192/6192771.png',
+                  const ActivitiesPage(),
+                ),
+              ),
+              Expanded(
+                child: _buildGridTile(
+                  context,
+                  'Evaluate Activities',
+                  'https://cdn-icons-png.flaticon.com/512/6192/6192771.png',
+                  const EvaluateActivities(),
+                ),
+              ),
+            ],
+          ),
+        );
 
-            // ... other grid tiles
-          ],
-        );
       case 3:
-        return GridView.count(
-          crossAxisCount: 1,
-          crossAxisSpacing: 10.0,
-          mainAxisSpacing: 10.0,
-          childAspectRatio: 2.0, // Adjust the aspect ratio as needed
-          children: [
-            _buildGridTile(
-              context,
-              'Survey',
-              'https://cdn-icons-png.flaticon.com/512/10266/10266602.png',
-              const SurveyPage(),
-            ),
-            _buildGridTile(
-              context,
-              'Help Desk',
-              'https://cdn-icons-png.flaticon.com/512/5639/5639690.png?ga=GA1.1.472911080.1695727240',
-              const MainHelpdeskScreen(),
-            ),
-            _buildGridTile(
-              context,
-              'Evaluate Activities',
-              'https://cdn-icons-png.flaticon.com/512/6192/6192771.png',
-              const EvaluateActivities(),
-            ),
-            // ... other grid tiles
-          ],
+        return Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 80.0,
+            backgroundColor: Colors.black,
+            title: Text('Answer Forms!'), // Set the title as needed
+            // Add any other app bar configuration you need
+          ),
+          backgroundColor: Color.fromRGBO(245, 199, 177, 100),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: _buildGridTile(
+                  context,
+                  'Survey',
+                  'https://cdn-icons-png.flaticon.com/512/10266/10266602.png',
+                  const SurveyPage(),
+                ),
+              ),
+              Expanded(
+                child: _buildGridTile(
+                  context,
+                  'Help Desk',
+                  'https://cdn-icons-png.flaticon.com/512/5639/5639690.png?ga=GA1.1.472911080.1695727240',
+                  const MainHelpdeskScreen(),
+                ),
+              ),
+              // ... other grid tiles
+            ],
+          ),
         );
+
       case 4:
         return const UsertabView();
       // ... other cases
@@ -909,7 +930,7 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Color.fromARGB(239, 235, 158, 120),
             size: 30,
           ),
-          label: 'Discover!',
+          label: 'Crowdsource',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.groups_2_rounded,
