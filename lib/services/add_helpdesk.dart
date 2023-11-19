@@ -5,7 +5,8 @@ import 'package:sk_app/widgets/toast_widget.dart';
 
 // import 'add_notif.dart';
 
-Future addHelpdesk(imageUrl, description, fileUrl, helpDeskTitle) async {
+Future addHelpdesk(
+    imageUrl, description, fileUrl, helpDeskTitle, concern) async {
   final docUser = FirebaseFirestore.instance.collection('Helpdesk').doc();
 
   final json = {
@@ -17,6 +18,7 @@ Future addHelpdesk(imageUrl, description, fileUrl, helpDeskTitle) async {
     'id': docUser.id,
     'userId': FirebaseAuth.instance.currentUser!.uid,
     'action': false,
+    'concern': concern
   };
 
   await docUser.set(json);

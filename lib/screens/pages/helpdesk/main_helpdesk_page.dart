@@ -290,6 +290,13 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
     );
   }
 
+  String concernDropdownValue = 'Help';
+  List<String> dropdownList = [
+    "Help",
+    "Education",
+    "Financial",
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -344,6 +351,42 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                         controller: concernController,
                       ),
                       const SizedBox(height: 30),
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            boxShadow: const [
+                              BoxShadow(
+                                  offset: Offset(0, 4),
+                                  spreadRadius: 3,
+                                  blurRadius: 5,
+                                  color: Colors.grey)
+                            ],
+                            color: const Color.fromARGB(156, 240, 169, 137)),
+                        child: DropdownButton<String>(
+                          underline: const SizedBox(),
+                          value: concernDropdownValue,
+                          onChanged: (newValue) {
+                            setState(() {
+                              concernDropdownValue = newValue!;
+                            });
+                          },
+                          items: dropdownList
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: TextWidget(
+                                  text: value,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
 
                       const Text(
                           'If you have images to upload and file please tap the upload image and upload file'),
@@ -381,6 +424,7 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                       const SizedBox(
                           width:
                               20), // Add some space between text and image name
+
                       Text(
                         uploadedImageName, // Display the uploaded image name
                         style: const TextStyle(
@@ -426,8 +470,12 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                         child: ElevatedButton(
                           onPressed: () {
                             // Submit the concern and image here
-                            addHelpdesk(idImageFileUrl, concernController.text,
-                                idFileFileUrl, titleController.text);
+                            addHelpdesk(
+                                idImageFileUrl,
+                                concernController.text,
+                                idFileFileUrl,
+                                titleController.text,
+                                concernDropdownValue);
 
                             // Navigate back to the main home screen
                             Navigator.of(context)

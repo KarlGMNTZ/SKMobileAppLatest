@@ -170,7 +170,7 @@ class LoginScreen extends StatelessWidget {
           } else {
             // If the account is not active, show a toast and sign out
             await FirebaseAuth.instance.signOut();
-            showToast("Account is not approve by admin.");
+            showToast("Account not yet activated.");
           }
         } else {
           await FirebaseAuth.instance.signOut();
