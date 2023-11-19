@@ -143,7 +143,7 @@ class _ActivitiesJoinedState extends State<ActivitiesJoined> {
                                                 fontSize: 14,
                                               ),
                                               maxLines:
-                                                  2, // Set the maximum number of lines before truncating
+                                                  1, // Set the maximum number of lines before truncating
                                               overflow: TextOverflow
                                                   .ellipsis, // Display ellipsis (...) when the text overflows
                                             ),

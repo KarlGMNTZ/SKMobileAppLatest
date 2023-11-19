@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:sk_app/widgets/text_widget.dart';
 
 class HelpDeskSubmitted extends StatefulWidget {
-  const HelpDeskSubmitted({super.key});
+  const HelpDeskSubmitted({Key? key}) : super(key: key);
 
   @override
   State<HelpDeskSubmitted> createState() => _HelpDeskSubmittedState();
@@ -16,6 +16,7 @@ class HelpDeskSubmitted extends StatefulWidget {
 class _HelpDeskSubmittedState extends State<HelpDeskSubmitted> {
   List helpdeskList = [];
   bool isLoading = true;
+
   getHelpDeskSubmitted() async {
     try {
       var res = await FirebaseFirestore.instance
@@ -28,7 +29,7 @@ class _HelpDeskSubmittedState extends State<HelpDeskSubmitted> {
         Map mapData = helpdesk[i].data();
         mapData['id'] = helpdesk[i].id;
         mapData['dateTime'] = mapData['dateTime'].toDate().toString();
-        if (mapData.containsKey('remarks') == false) {
+        if (!mapData.containsKey('remarks')) {
           mapData['remarks'] = '';
         }
         data.add(mapData);
@@ -42,12 +43,24 @@ class _HelpDeskSubmittedState extends State<HelpDeskSubmitted> {
     }
   }
 
-  width({required double value}) {
-    return MediaQuery.of(context).size.width * (value / 100);
-  }
-
-  height({required double value}) {
-    return MediaQuery.of(context).size.height * (value / 100);
+  void _showRemarksDialog(BuildContext context, String remarks) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Admin Remarks'),
+          content: Text(remarks),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -87,114 +100,106 @@ class _HelpDeskSubmittedState extends State<HelpDeskSubmitted> {
                         return Padding(
                           padding: const EdgeInsets.only(
                               left: 15, right: 15, top: 15),
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              border: Border.all(),
-                              color: Colors.white,
-                              boxShadow: const [
-                                BoxShadow(
+                          child: GestureDetector(
+                            onTap: () {
+                              if (helpdeskList[index]['action']) {
+                                _showRemarksDialog(
+                                  context,
+                                  helpdeskList[index]['remarks'],
+                                );
+                              }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                                color: Colors.white,
+                                boxShadow: const [
+                                  BoxShadow(
                                     color: Colors.grey,
                                     blurRadius: 5,
                                     spreadRadius: 3,
-                                    offset: Offset(1, 2))
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    const TextWidget(
-                                      text: 'Title: ',
-                                      isBold: true,
-                                      fontSize: 16,
-                                    ),
-                                    Expanded(
-                                      child: TextWidget(
-                                        text: helpdeskList[index]['title'],
-                                        fontSize: 16,
+                                    offset: Offset(1, 2),
+                                  )
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const TextWidget(
+                                        text: 'Title: ',
                                         isBold: true,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    const TextWidget(
-                                      text: 'Description: ',
-                                      isBold: true,
-                                      fontSize: 16,
-                                    ),
-                                    Expanded(
-                                      child: TextWidget(
-                                        text: helpdeskList[index]
-                                            ['description'],
                                         fontSize: 16,
-                                        isBold: true,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                helpdeskList[index]['action'] == false
-                                    ? const SizedBox()
-                                    : Row(
-                                        children: [
-                                          const TextWidget(
-                                            text: 'Remarks: ',
-                                            isBold: true,
-                                            fontSize: 16,
-                                          ),
-                                          Expanded(
-                                            child: TextWidget(
-                                              text: helpdeskList[index]
-                                                  ['remarks'],
-                                              fontSize: 16,
-                                              isBold: true,
+                                      Expanded(
+                                        child: TextWidget(
+                                          text: helpdeskList[index]['title'],
+                                          fontSize: 16,
+                                          isBold: true,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      const TextWidget(
+                                        text: 'Description: ',
+                                        isBold: true,
+                                        fontSize: 16,
+                                      ),
+                                      Expanded(
+                                        child: TextWidget(
+                                          text: helpdeskList[index]
+                                              ['description'],
+                                          fontSize: 16,
+                                          isBold: true,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  helpdeskList[index]['action'] == false
+                                      ? const SizedBox()
+                                      : Row(
+                                          children: [
+                                            const TextWidget(
+                                              text: 'Date Created: ',
+                                              fontSize: 14,
                                             ),
-                                          ),
-                                        ],
+                                            TextWidget(
+                                              text:
+                                                  "${DateFormat.yMMMd().format(DateTime.parse(
+                                                helpdeskList[index]['dateTime'],
+                                              ))} ${DateFormat.jm().format(DateTime.parse(
+                                                helpdeskList[index]['dateTime'],
+                                              ))}",
+                                              fontSize: 14,
+                                            ),
+                                          ],
+                                        ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Row(
+                                    children: [
+                                      const TextWidget(
+                                        text: 'Status ',
+                                        fontSize: 14,
                                       ),
-                                Row(
-                                  children: [
-                                    const TextWidget(
-                                      text: 'Date Created: ',
-                                      fontSize: 14,
-                                    ),
-                                    TextWidget(
-                                      text:
-                                          "${DateFormat.yMMMd().format(DateTime.parse(
-                                        helpdeskList[index]['dateTime'],
-                                      ))} ${DateFormat.jm().format(DateTime.parse(
-                                        helpdeskList[index]['dateTime'],
-                                      ))}",
-                                      fontSize: 14,
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Row(
-                                  children: [
-                                    const TextWidget(
-                                      text: 'Status ',
-                                      fontSize: 14,
-                                    ),
-                                    TextWidget(
-                                      text:
-                                          helpdeskList[index]['action'] == true
-                                              ? "Settled"
-                                              : "Unsettled",
-                                      fontSize: 14,
-                                      color:
-                                          helpdeskList[index]['action'] == true
-                                              ? Colors.green
-                                              : Colors.red,
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                      TextWidget(
+                                        text: helpdeskList[index]['action']
+                                            ? "Settled"
+                                            : "Unsettled",
+                                        fontSize: 14,
+                                        color: helpdeskList[index]['action']
+                                            ? Colors.green
+                                            : Colors.red,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );

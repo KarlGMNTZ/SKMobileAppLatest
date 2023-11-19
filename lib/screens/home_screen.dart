@@ -283,18 +283,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       actions: [
-                        IconButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return const InstructionsDialog();
-                              },
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.info,
-                            size: 25,
+                        Padding(
+                          padding: EdgeInsets.only(top: 20.0),
+                          child: IconButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return const InstructionsDialog();
+                                },
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.info,
+                              size: 25,
+                            ),
                           ),
                         ),
                         if (box.read('role') != 'Admin')
@@ -308,73 +311,82 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               );
                             },
-                            icon: Badge(
-                              label: TextWidget(
-                                text: badgeCount.toString(),
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
-                              child: const Icon(
-                                Icons.notifications,
-                                size: 25,
+                            icon: Padding(
+                              padding: EdgeInsets.only(top: 2.0),
+                              child: Badge(
+                                label: TextWidget(
+                                  text: badgeCount.toString(),
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                                child: const Padding(
+                                  padding: EdgeInsets.only(top: 20.0),
+                                  child: Icon(
+                                    Icons.notifications,
+                                    size: 25,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        IconButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text(
-                                  'Logout Confirmation',
-                                  style: TextStyle(
-                                    fontFamily: 'QBold',
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                content: const Text(
-                                  'Are you sure you want to Logout?',
-                                  style: TextStyle(
-                                    fontFamily: 'QRegular',
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  MaterialButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(true),
-                                    child: const Text(
-                                      'Close',
-                                      style: TextStyle(
-                                        fontFamily: 'QRegular',
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 20.0),
+                          child: IconButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text(
+                                    'Logout Confirmation',
+                                    style: TextStyle(
+                                      fontFamily: 'QBold',
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  MaterialButton(
-                                    onPressed: () async {
-                                      addUserActivity(activity: "Logout");
-                                      await FirebaseAuth.instance.signOut();
-                                      Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                          builder: (context) => LoginScreen(),
+                                  content: const Text(
+                                    'Are you sure you want to Logout?',
+                                    style: TextStyle(
+                                      fontFamily: 'QRegular',
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    MaterialButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(true),
+                                      child: const Text(
+                                        'Close',
+                                        style: TextStyle(
+                                          fontFamily: 'QRegular',
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                      );
-                                    },
-                                    child: const Text(
-                                      'Continue',
-                                      style: TextStyle(
-                                        fontFamily: 'QRegular',
-                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.logout,
-                            size: 25,
+                                    MaterialButton(
+                                      onPressed: () async {
+                                        addUserActivity(activity: "Logout");
+                                        await FirebaseAuth.instance.signOut();
+                                        Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                            builder: (context) => LoginScreen(),
+                                          ),
+                                        );
+                                      },
+                                      child: const Text(
+                                        'Continue',
+                                        style: TextStyle(
+                                          fontFamily: 'QRegular',
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.logout,
+                              size: 25,
+                            ),
                           ),
                         ),
                       ],
@@ -768,7 +780,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     text: data.docs[index]['description'],
                                     fontSize: 12,
                                     color: Colors.grey,
-                                    maxLines: 10,
+                                    maxLines: 5,
                                   ),
                                 ],
                               ),

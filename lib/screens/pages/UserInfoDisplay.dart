@@ -34,17 +34,23 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
     _checkProfileUpdateReminder();
   }
 
+  bool _isUpdateDialogShown = false;
+
   Future<void> _checkProfileUpdateReminder() async {
+    if (_isUpdateDialogShown) {
+      return; // Skip checking if the dialog has already been shown
+    }
+
     final docUser = _firestore.collection('Users').doc(currentUser!.uid);
     final docSnapshot = await docUser.get();
 
     if (docSnapshot.exists) {
       final userDataFromFirestore = docSnapshot.data() as Map<String, dynamic>;
-      final creationDate = userDataFromFirestore['dateTime'] as Timestamp?;
+      final lastEditTime = userDataFromFirestore['editTime'] as Timestamp?;
 
-      if (creationDate != null) {
+      if (lastEditTime != null) {
         DateTime sixMonthsLater =
-            creationDate.toDate().add(Duration(days: 6 * 30));
+            lastEditTime.toDate().add(Duration(days: 6 * 30));
 
         if (DateTime.now().isAfter(sixMonthsLater)) {
           _showUpdateProfileDialog();
@@ -54,13 +60,16 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
   }
 
   Future<void> _showUpdateProfileDialog() async {
+    _isUpdateDialogShown = true; // Set the flag to true
+
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Update Profile"),
           content: Text(
-              "Please update your profile by visiting the SK office. Your account will be deactivated if not updated."),
+            "Please update your profile by visiting the SK office. Your account will be deactivated if not updated.",
+          ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
