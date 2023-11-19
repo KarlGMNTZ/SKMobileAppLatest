@@ -125,22 +125,29 @@ class _ActivitiesJoinedState extends State<ActivitiesJoined> {
                                               MainAxisAlignment.start,
                                           children: [
                                             Text(
-                                              activitiesJoinedList[index]
-                                                  ['name'],
+                                              'Activity Name: ${activitiesJoinedList[index]['name']}',
                                               style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontFamily: "Regular",
-                                                  fontSize: 13),
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: "Regular",
+                                                fontSize: 20,
+                                              ),
                                             ),
+                                            SizedBox(height: 10),
                                             Text(
-                                              activitiesJoinedList[index]
-                                                  ['description'],
+                                              'Description: ${activitiesJoinedList[index]['description']}',
                                               style: const TextStyle(
-                                                  fontWeight: FontWeight.normal,
-                                                  fontFamily: "Regular",
-                                                  color: Colors.grey,
-                                                  fontSize: 9),
+                                                fontWeight: FontWeight.normal,
+                                                fontFamily: "Regular",
+                                                color: Color.fromARGB(
+                                                    255, 0, 0, 0),
+                                                fontSize: 14,
+                                              ),
+                                              maxLines:
+                                                  2, // Set the maximum number of lines before truncating
+                                              overflow: TextOverflow
+                                                  .ellipsis, // Display ellipsis (...) when the text overflows
                                             ),
+                                            SizedBox(height: 10),
                                             Text(
                                               DateFormat.yMMMEd().format(
                                                   DateTime.parse(

@@ -261,17 +261,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: AppBar(
                       primary: true,
                       backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                      title: Text(
-                        'Hello!',
-                        style:
-                            Theme.of(context).textTheme.displaySmall?.copyWith(
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.white,
-                                    ) ??
-                                TextStyle(
-                                  fontWeight: FontWeight.w200,
-                                  color: Colors.white,
-                                ),
+                      title: Padding(
+                        padding: EdgeInsets.only(
+                            top: 30.0), // Adjust the top padding as needed
+                        child: Text(
+                          'Welcome to SK App!',
+                          style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.white,
+                                    fontSize:
+                                        18, // Adjust the font size as needed
+                                  ) ??
+                              TextStyle(
+                                fontWeight: FontWeight.w300,
+                                color: Colors.white,
+                                fontSize: 18, // Adjust the font size as needed
+                              ),
+                        ),
                       ),
                       actions: [
                         IconButton(
@@ -285,7 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           icon: const Icon(
                             Icons.info,
-                            size: 30,
+                            size: 25,
                           ),
                         ),
                         if (box.read('role') != 'Admin')
@@ -307,7 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               child: const Icon(
                                 Icons.notifications,
-                                size: 30,
+                                size: 25,
                               ),
                             ),
                           ),
@@ -365,7 +374,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           icon: const Icon(
                             Icons.logout,
-                            size: 30,
+                            size: 25,
                           ),
                         ),
                       ],
@@ -808,7 +817,8 @@ class _HomeScreenState extends State<HomeScreen> {
         return Scaffold(
           appBar: AppBar(
             toolbarHeight: 80.0,
-            title: Text('Discover Activities'),
+            title: Text('DISCOVER NEW'),
+            centerTitle: true,
             backgroundColor: Colors.black, // Set the title as needed
             // Add any other app bar configuration you need
           ),
@@ -841,7 +851,8 @@ class _HomeScreenState extends State<HomeScreen> {
           appBar: AppBar(
             toolbarHeight: 80.0,
             backgroundColor: Colors.black,
-            title: Text('Answer Forms!'), // Set the title as needed
+            title: Text('FORMS AND CONCERNS'),
+            centerTitle: true, // Set the title as needed
             // Add any other app bar configuration you need
           ),
           backgroundColor: Color.fromRGBO(245, 199, 177, 100),
@@ -872,6 +883,9 @@ class _HomeScreenState extends State<HomeScreen> {
       case 4:
         return const UsertabView();
       // ... other cases
+      case 5:
+        return const UserInfoDisplay();
+
       default:
         return const SizedBox.shrink();
     }
@@ -918,75 +932,65 @@ class _HomeScreenState extends State<HomeScreen> {
       type: BottomNavigationBarType.fixed,
       showSelectedLabels: true,
       showUnselectedLabels: false,
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home,
-              color: Color.fromARGB(239, 235, 158, 120), size: 30),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.campaign_rounded,
-            color: Color.fromARGB(239, 235, 158, 120),
-            size: 30,
-          ),
-          label: 'Crowdsource',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.groups_2_rounded,
-              color: Color.fromARGB(239, 235, 158, 120), size: 30),
-          label: 'Activity',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.class_outlined,
-              color: Color.fromARGB(239, 235, 158, 120), size: 30),
-          label: 'Forms',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.account_box_rounded,
-              color: Color.fromARGB(239, 235, 158, 120), size: 30),
-          label: 'Account',
-        ),
+      items: [
+        _buildNavigationBarItem(Icons.home, 0),
+        _buildNavigationBarItem(Icons.campaign_rounded, 1),
+        _buildNavigationBarItem(Icons.groups_2_rounded, 2),
+        _buildNavigationBarItem(Icons.class_outlined, 3),
+        _buildNavigationBarItem(Icons.receipt_long_rounded, 4),
+        _buildNavigationBarItem(Icons.account_box_rounded, 5),
       ],
     );
   }
 
-  Widget _buildGridTile(
-    BuildContext context,
-    String title,
-    String imageUrl,
-    Widget page,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => page));
-      },
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
-        color: Colors.white,
-        child: Container(
-          width: double.infinity, // Adjust the width as needed
-          height: 120.0, // Adjust the height as needed
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextWidget(
-                text: title,
-                fontSize: 17,
-                color: Colors.black,
-              ),
-              const SizedBox(height: 10),
-              Image.network(imageUrl, height: 50, width: 50),
-            ],
-          ),
-        ),
+  BottomNavigationBarItem _buildNavigationBarItem(IconData icon, int index) {
+    return BottomNavigationBarItem(
+      icon: Icon(
+        icon,
+        color: _currentIndex == index
+            ? Colors.black
+            : Color.fromARGB(239, 235, 158, 120),
+        size: 30,
       ),
+      label: '',
     );
   }
+}
+
+Widget _buildGridTile(
+  BuildContext context,
+  String title,
+  String imageUrl,
+  Widget page,
+) {
+  return GestureDetector(
+    onTap: () {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => page));
+    },
+    child: Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+      ),
+      color: Colors.white,
+      child: Container(
+        width: double.infinity, // Adjust the width as needed
+        height: 145.0, // Adjust the height as needed
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextWidget(
+              text: title,
+              fontSize: 17,
+              color: Colors.black,
+            ),
+            const SizedBox(height: 10),
+            Image.network(imageUrl, height: 50, width: 50),
+          ],
+        ),
+      ),
+    ),
+  );
 }
 
 Widget _buildSection(List<Widget> children) {

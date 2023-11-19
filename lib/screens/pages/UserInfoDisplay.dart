@@ -31,6 +31,47 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
     super.initState();
     currentUser = _auth.currentUser;
     getUserData();
+    _checkProfileUpdateReminder();
+  }
+
+  Future<void> _checkProfileUpdateReminder() async {
+    final docUser = _firestore.collection('Users').doc(currentUser!.uid);
+    final docSnapshot = await docUser.get();
+
+    if (docSnapshot.exists) {
+      final userDataFromFirestore = docSnapshot.data() as Map<String, dynamic>;
+      final creationDate = userDataFromFirestore['dateTime'] as Timestamp?;
+
+      if (creationDate != null) {
+        DateTime sixMonthsLater =
+            creationDate.toDate().add(Duration(days: 6 * 30));
+
+        if (DateTime.now().isAfter(sixMonthsLater)) {
+          _showUpdateProfileDialog();
+        }
+      }
+    }
+  }
+
+  Future<void> _showUpdateProfileDialog() async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Update Profile"),
+          content: Text(
+              "Please update your profile by visiting the SK office. Your account will be deactivated if not updated."),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> getUserData() async {
@@ -111,8 +152,15 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('User Profile'),
+        backgroundColor: Color.fromARGB(255, 0, 0, 0),
+        toolbarHeight: 80,
+        centerTitle: true,
+        // You can customize the appbar further as needed
+      ),
       body: Container(
-        height: 1000,
+        height: MediaQuery.of(context).size.height,
         color: const Color.fromARGB(241, 241, 182, 152),
         child: SingleChildScrollView(
           child: Column(
@@ -167,7 +215,7 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
                               const SizedBox(height: 20),
                               ListTile(
                                 title: Text(
-                                  ' ${userData['email']}',
+                                  'Email: ${userData['email']}',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -175,6 +223,7 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
                                   ),
                                 ),
                               ),
+                              const Divider(),
                               ListTile(
                                 title: Text(
                                   'Address: ${userData['address']}',
@@ -183,7 +232,10 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
                                     color: Colors.black,
                                   ),
                                 ),
-                                subtitle: Text(
+                              ),
+                              const Divider(),
+                              ListTile(
+                                title: Text(
                                   'Age: ${userData['age']}',
                                   style: const TextStyle(
                                     fontSize: 18,
@@ -191,15 +243,19 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
                                   ),
                                 ),
                               ),
+                              const Divider(),
                               ListTile(
                                 title: Text(
-                                  'Mobile Number: ${userData['number']}',
+                                  'Mobile Number: +63 ${userData['number']}',
                                   style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
                                   ),
                                 ),
-                                subtitle: Text(
+                              ),
+                              const Divider(),
+                              ListTile(
+                                title: Text(
                                   'Educational Level: ${userData['school']}',
                                   style: const TextStyle(
                                     fontSize: 18,
@@ -207,6 +263,7 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
                                   ),
                                 ),
                               ),
+                              const Divider(),
                               ListTile(
                                 title: Text(
                                   'Youthclass: ${userData['youthclass']}',
@@ -215,14 +272,18 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
                                     color: Colors.black,
                                   ),
                                 ),
-                                subtitle: Text(
-                                  'Work: ${userData['work']}',
+                              ),
+                              const Divider(),
+                              ListTile(
+                                title: Text(
+                                  'Work Status: ${userData['work']}',
                                   style: const TextStyle(
                                     fontSize: 18,
                                     color: Colors.black,
                                   ),
                                 ),
                               ),
+                              const Divider(),
                               ListTile(
                                 title: Text(
                                   'Civil Status: ${userData['civilstatus']}',
@@ -231,7 +292,10 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
                                     color: Colors.black,
                                   ),
                                 ),
-                                subtitle: Text(
+                              ),
+                              const Divider(),
+                              ListTile(
+                                title: Text(
                                   'Birthdate: ${DateFormat('yyyy-MM-dd').format((userData['birthdate'] as Timestamp).toDate())}',
                                   style: const TextStyle(
                                     fontSize: 18,
@@ -239,6 +303,7 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
                                   ),
                                 ),
                               ),
+                              const Divider(),
                               ListTile(
                                 title: Text(
                                   'Purok: ${userData['purok']}',
