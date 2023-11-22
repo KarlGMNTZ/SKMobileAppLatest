@@ -29,12 +29,31 @@ class _SpecificActivityState extends State<SpecificActivity> {
         .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .where('activityID', isEqualTo: widget.activityID)
         .get();
+
     if (res.docs.isEmpty) {
-      if (!context.mounted) return;
-      Navigator.of(context).push(MaterialPageRoute(
+      // Get the activity details
+      var activityDoc = await FirebaseFirestore.instance
+          .collection('Activities')
+          .doc(widget.activityID)
+          .get();
+
+      // Check if the activity is not expired
+      DateTime expirationDate =
+          (activityDoc['expirationDate'] as Timestamp).toDate();
+      DateTime currentDate = DateTime.now();
+      DateTime twoDaysBeforeExpiration =
+          expirationDate.subtract(Duration(days: 2));
+
+      if (currentDate.isBefore(twoDaysBeforeExpiration)) {
+        if (!context.mounted) return;
+        Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => RegistrationPage(
-                activityID: widget.activityID,
-              )));
+            activityID: widget.activityID,
+          ),
+        ));
+      } else {
+        showToast("Registration closed! Activity has expired.");
+      }
     } else {
       showToast("Already registered! Thank you.");
     }

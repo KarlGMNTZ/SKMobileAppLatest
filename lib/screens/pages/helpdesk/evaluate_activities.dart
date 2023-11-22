@@ -99,13 +99,27 @@ class _EvaluateActivitiesState extends State<EvaluateActivities> {
         .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .where('activityID', isEqualTo: activityID)
         .get();
+
     if (res.docs.isEmpty) {
-      if (!context.mounted) return;
-      Navigator.push(
+      DateTime expirationDate = DateTime.parse(activitiesList.firstWhere(
+          (activity) => activity['id'] == activityID)['expirationDate']);
+      DateTime now = DateTime.now();
+
+      // Check if it's two days or more after the expirationDate
+      if (now.isAfter(expirationDate.add(Duration(days: 3)))) {
+        showToast("You cannot evaluate now");
+      } else {
+        if (!context.mounted) return;
+        Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => EvaluationPage(
-                  activityName: activityName, activityID: activityID)));
+            builder: (context) => EvaluationPage(
+              activityName: activityName,
+              activityID: activityID,
+            ),
+          ),
+        );
+      }
     } else {
       showToast("Activity already evaluated");
     }
