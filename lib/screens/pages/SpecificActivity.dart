@@ -11,12 +11,12 @@ class SpecificActivity extends StatefulWidget {
   final String activityID;
 
   const SpecificActivity({
-    super.key,
+    Key? key,
     required this.activityName,
     required this.activityDescription,
     required this.imageUrl,
     required this.activityID,
-  });
+  }) : super(key: key);
 
   @override
   State<SpecificActivity> createState() => _SpecificActivityState();
@@ -40,35 +40,59 @@ class _SpecificActivityState extends State<SpecificActivity> {
     }
   }
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Specific Activity'),
+        backgroundColor: Color.fromARGB(255, 242, 151, 101),
+        centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Card(
+          elevation: 5,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              const SizedBox(height: 40),
               SizedBox(
-                width: 250, // Set the desired width
-                height: 350, // Set the desired height
-                child: Image.network(
-                  widget.imageUrl,
-                  fit: BoxFit.cover, // You can adjust the fit as needed
+                height: 250,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
+                  child: Image.network(
+                    widget.imageUrl,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-              const SizedBox(height: 16), // Add some spacing
-              Text(widget.activityName),
-              const SizedBox(height: 8), // Add more spacing
-              Text(widget.activityDescription),
-              const SizedBox(height: 120), // Add spacing for the button
-              ElevatedButton(
-                onPressed: () {
-                  checkIfAlreadyRegistered();
-                },
-                child: const Text('Register'),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      widget.activityName,
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      widget.activityDescription,
+                      style: Theme.of(context).textTheme.bodyText2,
+                    ),
+                  ],
+                ),
+              ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    checkIfAlreadyRegistered();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color.fromARGB(255, 242, 151, 101),
+                  ),
+                  child: const Text('Register'),
+                ),
               ),
             ],
           ),

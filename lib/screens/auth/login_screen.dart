@@ -2,13 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:sk_app/screens/auth/forgot_password_screen.dart';
 import 'package:sk_app/screens/auth/signup_screen.dart';
 import 'package:sk_app/screens/home_screen.dart';
 import 'package:sk_app/widgets/button_widget.dart';
 import 'package:sk_app/widgets/text_widget.dart';
 import 'package:sk_app/widgets/textfield_widget.dart';
-import 'package:flutter/scheduler.dart';
+
 import '../../widgets/toast_widget.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -30,24 +31,35 @@ class LoginScreen extends StatelessWidget {
                   children: [
                     Container(
                       height: 225,
-                      width: medQuery.width * 0.5,
-                      decoration: const BoxDecoration(color: Colors.blue),
-                    ),
-                    Container(
-                      height: 225,
-                      width: medQuery.width * 0.5,
-                      decoration: const BoxDecoration(color: Colors.red),
+                      width: medQuery.width,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color.fromARGB(255, 175, 87, 40),
+                            Color.fromARGB(255, 221, 145, 69),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 10.0,
+                            spreadRadius: 2.0,
+                            offset: Offset(0, 5),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 100),
+                  padding: const EdgeInsets.only(top: 50),
                   child: Center(
                     child: Container(
-                      height: 300,
-                      width: 250,
+                      height: 180,
+                      width: 180,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
                           image: const DecorationImage(
                               image: AssetImage('assets/images/logo.png'),
                               fit: BoxFit.fitWidth)),
@@ -99,6 +111,7 @@ class LoginScreen extends StatelessWidget {
               onPressed: () {
                 login(context);
               },
+              color: Color.fromARGB(255, 210, 123, 75), // Light beige color
             ),
             const SizedBox(
               height: 10,
@@ -121,18 +134,18 @@ class LoginScreen extends StatelessWidget {
                 ),
               ],
             ),
-            TextButton(
-              onPressed: (() {
-                // Navigator.of(context).pushReplacement(
-                //     MaterialPageRoute(
-                //         builder: (context) => SignupScreen()));
-              }),
-              child: const TextWidget(
-                  fontFamily: 'Bold',
-                  text: "Continue as Admin",
-                  fontSize: 14,
-                  color: Colors.blue),
-            ),
+            //TextButton(
+            //onPressed: (() {
+            // Navigator.of(context).pushReplacement(
+            //     MaterialPageRoute(
+            //         builder: (context) => SignupScreen()));
+            //}),
+            //child: const TextWidget(
+            //fontFamily: 'Bold',
+            //text: "Continue as Admin",
+            //fontSize: 14,
+            // color: Colors.blue),
+            //),
           ],
         ),
       ),

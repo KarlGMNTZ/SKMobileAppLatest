@@ -143,10 +143,10 @@ class _SurveyPageState extends State<SurveyPage> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
-                    if (await canLaunchUrl(Uri.parse(link))) {
-                      await launchUrl(Uri.parse(link));
-                    } else {
-                      showToast('Invalid google form link');
+                    try {
+                      await launch(link);
+                    } catch (e) {
+                      showToast('Error launching the link');
                     }
                     Navigator.pop(
                         context); // Close the dialog after launching the link

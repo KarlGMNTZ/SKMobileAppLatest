@@ -231,20 +231,87 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         ),
                         const SizedBox(height: 20),
                         Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            TextFieldWidget(
-                              height: 150,
-                              maxLine: 10,
-                              label: 'Input Team Name',
-                              controller: teamnameController,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: TextFieldWidget(
+                                    height: 70,
+                                    maxLine: 3,
+                                    label: 'Input Name',
+                                    controller: teamnameController,
+                                  ),
+                                ),
+                                SizedBox(width: 10), // Add some spacing
+                                // Small icon button
+                                IconButton(
+                                  icon: Icon(Icons.info_outline,
+                                      size:
+                                          20), // You can choose any icon you want
+                                  onPressed: () {
+                                    // Show dialog when the icon is clicked
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text("Information"),
+                                          content: Text(
+                                            "If it is a single registration activity, just put your name.\n \n If it is a team registration, you must all register and put your team name.",
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text("OK"),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 30),
-                            TextFieldWidget(
-                              height: 150,
-                              maxLine: 10,
-                              label: 'Input Comments',
-                              controller: commentController,
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                TextFieldWidget(
+                                  height: 100,
+                                  width: 300,
+                                  maxLine: 7,
+                                  label: 'Tell us more',
+                                  controller: commentController,
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.info_outline,
+                                      size:
+                                          20), // You can choose any icon you want
+                                  onPressed: () {
+                                    // Show dialog when the icon is clicked
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text("Tell us more"),
+                                          content: Text(
+                                            "If you have any requests and message to SK office about your registration. Please let us know.",
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text("OK"),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
                             const SizedBox(height: 30),
                             GestureDetector(

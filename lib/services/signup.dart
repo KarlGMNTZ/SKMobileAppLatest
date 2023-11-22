@@ -45,8 +45,7 @@ Future<void> signup(
     'id': docUser.id,
     'profile': profile,
     'residency': residency,
-    'dateTime': DateTime.now(),
-    'editTime': DateTime.now(),
+    'dateTime': DateTime.now().toIso8601String(),
   };
 
   await docUser.set(json);

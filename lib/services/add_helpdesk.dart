@@ -18,7 +18,8 @@ Future addHelpdesk(
     'id': docUser.id,
     'userId': FirebaseAuth.instance.currentUser!.uid,
     'action': false,
-    'concern': concern
+    'concern': concern,
+    'isArchived': false,
   };
 
   await docUser.set(json);

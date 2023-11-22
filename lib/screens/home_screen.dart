@@ -28,6 +28,7 @@ import 'package:sk_app/screens/pages/services_page.dart';
 import 'package:sk_app/screens/pages/survey_page.dart';
 import 'package:sk_app/screens/pages/tabbar.dart';
 import 'package:sk_app/screens/pages/usertabbar.dart';
+import 'package:sk_app/screens/tabbarViewActs.dart';
 import 'package:sk_app/services/add_activities.dart';
 import 'package:sk_app/utils/colors.dart';
 import 'package:sk_app/widgets/text_widget.dart';
@@ -760,11 +761,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 }
                               },
                               contentPadding: const EdgeInsets.all(16.0),
-                              title: TextWidget(
-                                text: data.docs[index]['name'],
-                                fontSize: 18,
-                                color: Colors.black,
-                                fontFamily: 'Bold',
+                              title: Text(
+                                data.docs[index]['name'],
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black,
+                                  fontFamily: 'Bold',
+                                ),
+                                textAlign: TextAlign.center,
                               ),
                               subtitle: Column(
                                 children: [
@@ -826,44 +830,13 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         return const TabbarView();
       case 2:
-        return Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 80.0,
-            title: Text('DISCOVER NEW'),
-            centerTitle: true,
-            backgroundColor: Colors.black, // Set the title as needed
-            // Add any other app bar configuration you need
-          ),
-          backgroundColor: Color.fromRGBO(245, 199, 177, 100),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: _buildGridTile(
-                  context,
-                  'Activities',
-                  'https://cdn-icons-png.flaticon.com/512/6192/6192771.png',
-                  const ActivitiesPage(),
-                ),
-              ),
-              Expanded(
-                child: _buildGridTile(
-                  context,
-                  'Evaluate Activities',
-                  'https://cdn-icons-png.flaticon.com/512/6192/6192771.png',
-                  const EvaluateActivities(),
-                ),
-              ),
-            ],
-          ),
-        );
-
+        return const TabbarViewActs();
       case 3:
         return Scaffold(
           appBar: AppBar(
             toolbarHeight: 80.0,
             backgroundColor: Colors.black,
-            title: Text('FORMS AND CONCERNS'),
+            title: Text('Forms and Concerns'),
             centerTitle: true, // Set the title as needed
             // Add any other app bar configuration you need
           ),

@@ -46,11 +46,12 @@ class _ProfileScreenState extends State<UserInfoDisplay> {
 
     if (docSnapshot.exists) {
       final userDataFromFirestore = docSnapshot.data() as Map<String, dynamic>;
-      final lastEditTime = userDataFromFirestore['editTime'] as Timestamp?;
+      final lastEditTimeString = userDataFromFirestore['editTime'] as String?;
 
-      if (lastEditTime != null) {
-        DateTime sixMonthsLater =
-            lastEditTime.toDate().add(Duration(days: 6 * 30));
+      if (lastEditTimeString != null) {
+        DateTime lastEditTime = DateTime.parse(lastEditTimeString);
+
+        DateTime sixMonthsLater = lastEditTime.add(Duration(days: 6 * 30));
 
         if (DateTime.now().isAfter(sixMonthsLater)) {
           _showUpdateProfileDialog();

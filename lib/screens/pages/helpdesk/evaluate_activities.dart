@@ -47,21 +47,38 @@ class _EvaluateActivitiesState extends State<EvaluateActivities> {
       for (var i = 0; i < registration.length; i++) {
         Map mapdata = registration[i].data();
         var activityDocRef = mapdata['activityDocRef'] as DocumentReference;
-        var snapshot = await activityDocRef.get();
-        var activityObject = snapshot.data() as Map;
 
-        DateTime expirationDate =
-            activityObject['expirationDate'].toDate(); // Convert to DateTime
+        try {
+          var snapshot = await activityDocRef.get();
 
-        // Check if the activity is expired today or earlier
-        if (now.isAfter(expirationDate) ||
-            now.isAtSameMomentAs(expirationDate)) {
-          // Include the activity starting from tomorrow
-          if (now.add(Duration(days: 1)).isAfter(expirationDate)) {
-            activityObject['id'] = activityDocRef.id;
-            activityObject['expirationDate'] = expirationDate.toString();
-            tempData.add(activityObject);
+          if (snapshot.exists) {
+            var activityObject = snapshot.data() as Map?;
+
+            if (activityObject != null) {
+              DateTime expirationDate = activityObject['expirationDate']
+                  .toDate(); // Convert to DateTime
+
+              // Check if the activity is expired today or earlier
+              if (now.isAfter(expirationDate) ||
+                  now.isAtSameMomentAs(expirationDate)) {
+                // Include the activity starting from tomorrow
+                if (now.add(Duration(days: 1)).isAfter(expirationDate)) {
+                  activityObject['id'] = activityDocRef.id;
+                  activityObject['expirationDate'] = expirationDate.toString();
+                  tempData.add(activityObject);
+                }
+              }
+            } else {
+              // Handle the case where 'expirationDate' field or other required fields are missing
+              print('Error: Required fields missing in document data');
+            }
+          } else {
+            // Handle the case where the document doesn't exist
+            print('Error: Document does not exist');
           }
+        } catch (e) {
+          // Handle any errors that occurred during document retrieval
+          print('Error fetching document: $e');
         }
       }
 
@@ -103,11 +120,6 @@ class _EvaluateActivitiesState extends State<EvaluateActivities> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(238, 241, 210, 194),
-        centerTitle: true,
-        title: const Text("Activities Evaluation"),
-      ),
       body: isLoading == true
           ? SizedBox(
               height: height(value: 100),

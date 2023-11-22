@@ -336,14 +336,26 @@ class _SignupScreenState extends State<SignupScreen> {
                 Row(
                   children: [
                     Container(
-                      height: 150,
-                      width: medQuery.width * 0.5,
-                      decoration: const BoxDecoration(color: Colors.blue),
-                    ),
-                    Container(
-                      height: 150,
-                      width: medQuery.width * 0.5,
-                      decoration: const BoxDecoration(color: Colors.red),
+                      height: 225,
+                      width: medQuery.width,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color.fromARGB(255, 175, 87, 40),
+                            Color.fromARGB(255, 221, 145, 69),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 10.0,
+                            spreadRadius: 2.0,
+                            offset: Offset(0, 5),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

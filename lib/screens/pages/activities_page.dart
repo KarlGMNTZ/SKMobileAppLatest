@@ -104,15 +104,6 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
                 addActivityDialog(context, false, '', '');
               })
           : null,
-      appBar: AppBar(
-        title: const TextWidget(
-          text: 'Activities',
-          fontSize: 18,
-          color: Colors.white,
-          fontFamily: 'Bold',
-        ),
-        centerTitle: true,
-      ),
       body: StreamBuilder<QuerySnapshot>(
           stream:
               FirebaseFirestore.instance.collection('Activities').snapshots(),

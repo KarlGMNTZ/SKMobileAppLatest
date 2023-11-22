@@ -119,7 +119,7 @@ class _HelpdeskStatusPageState extends State<HelpdeskStatusPage> {
               child: helpdeskList.isEmpty
                   ? const Center(
                       child: Text(
-                        'No Helpdesk Interaction yet.',
+                        'No Concern Interaction yet.',
                         style: TextStyle(fontSize: 18),
                       ),
                     )
@@ -148,7 +148,7 @@ class _HelpdeskStatusPageState extends State<HelpdeskStatusPage> {
                                 Row(
                                   children: [
                                     const TextWidget(
-                                      text: 'Helpdesk Description: ',
+                                      text: 'Concern Description: ',
                                       isBold: true,
                                       fontSize: 16,
                                     ),

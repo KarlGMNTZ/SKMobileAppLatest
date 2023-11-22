@@ -290,9 +290,9 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
     );
   }
 
-  String concernDropdownValue = 'Help';
+  String concernDropdownValue = 'Health';
   List<String> dropdownList = [
-    "Help",
+    "Health",
     "Education",
     "Financial",
   ];
@@ -318,10 +318,6 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
               width: double.infinity,
               decoration: const BoxDecoration(
                 color: Color.fromRGBO(245, 199, 177, 100),
-              ),
-              child: Image.network(
-                'https://raw.githubusercontent.com/abuanwar072/Meditation-App/master/assets/images/undraw_pilates_gpdb.png',
-                height: 1200,
               ),
             ),
             Padding(
@@ -387,83 +383,90 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                         ),
                       ),
                       const SizedBox(height: 30),
-
                       const Text(
                           'If you have images to upload and file please tap the upload image and upload file'),
                       const SizedBox(
                         height: 10,
                       ),
-
-                      ElevatedButton(
-                        onPressed: () {
-                          uploadImage(context,
-                              'gallery'); // Call your upload function here
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            const Color.fromRGBO(245, 199, 177, 100),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              uploadImage(context,
+                                  'gallery'); // Call your upload function here
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                const Color.fromRGBO(245, 199, 177, 100),
+                              ),
+                              fixedSize: MaterialStateProperty.all<Size>(
+                                const Size(
+                                  150,
+                                  40,
+                                ), // Set your desired width and height
+                              ), // Set your desired color
+                            ),
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Upload Image',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          fixedSize: MaterialStateProperty.all<Size>(
-                            const Size(
-                                150, 40), // Set your desired width and height
-                          ), // Set your desired color
-                        ),
-                        child: const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Upload Image',
+                          const SizedBox(
+                            width: 20,
+                          ), // Add some space between buttons
+                          Text(
+                            uploadedImageName, // Display the uploaded image name
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(
+                              width: 10), // Add some space between buttons
+
+                          ElevatedButton(
+                            onPressed: () {
+                              uploadFile(context,
+                                  'gallery'); // Call your upload function here
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                const Color.fromRGBO(245, 199, 177, 100),
+                              ), // Set your desired color
+                              fixedSize: MaterialStateProperty.all<Size>(
+                                const Size(
+                                  150,
+                                  40,
+                                ), // Set your desired width and height
+                              ),
+                            ),
+                            child: const Text(
+                              'Upload File',
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                          width:
-                              20), // Add some space between text and image name
-
-                      Text(
-                        uploadedImageName, // Display the uploaded image name
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      ElevatedButton(
-                        onPressed: () {
-                          uploadFile(context,
-                              'gallery'); // Call your upload function here
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            const Color.fromRGBO(245, 199, 177, 100),
-                          ), // Set your desired color
-                          fixedSize: MaterialStateProperty.all<Size>(
-                            const Size(
-                                150, 40), // Set your desired width and height
                           ),
-                        ),
-                        child: const Text(
-                          'Upload File',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
+                          const SizedBox(
+                            width: 20,
+                          ), // Add some space between text and file name
+                          Text(
+                            uploadedFileName, // Display the uploaded file name
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(
-                          width:
-                              20), // Add some space between text and image name
-                      Text(
-                        uploadedFileName, // Display the uploaded image name
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                        ),
+                        ],
                       ),
                       const SizedBox(height: 20),
                       Center(
@@ -497,7 +500,7 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 50),
+                      const SizedBox(height: 30),
                       const Center(
                         child: Text(
                           'For more information please contact',

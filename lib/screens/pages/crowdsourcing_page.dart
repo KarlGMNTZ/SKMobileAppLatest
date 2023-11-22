@@ -146,6 +146,10 @@ class _CroudsourcingPageState extends State<CroudsourcingPage> {
 
   late String idImageURL = '';
 
+  DateTime? selectedDateTime; // To store the DateTime
+
+  Timestamp? expirationDate; //
+
   Future<void> uploadImage(String inputSource) async {
     final picker = ImagePicker();
     XFile pickedImage;
@@ -381,30 +385,30 @@ class _CroudsourcingPageState extends State<CroudsourcingPage> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      _toggleLike(index, data.docs[index]);
-                                    },
-                                    icon: Icon(
-                                      data.docs[index]['likes'].contains(
-                                              FirebaseAuth
-                                                  .instance.currentUser!.uid)
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                  if (data.docs[index]['likes'].length > 0)
-                                    StreamBuilder<int>(
-                                      stream: likeCountController.stream,
-                                      initialData:
-                                          data.docs[index]['likes'].length,
-                                      builder: (context, snapshot) {
-                                        return Text(
-                                          '${data.docs[index]['likes'].length}',
-                                        );
-                                      },
-                                    ),
+                                  //IconButton(
+                                  //onPressed: () {
+                                  //_toggleLike(index, data.docs[index]);
+                                  //},
+                                  // icon: Icon(
+                                  //  data.docs[index]['likes'].contains(
+                                  //           FirebaseAuth
+                                  //               .instance.currentUser!.uid)
+                                  //      ? Icons.favorite
+                                  //      : Icons.favorite_border,
+                                  //  color: Colors.red,
+                                  // ),
+                                  //),
+                                  //if (data.docs[index]['likes'].length > 0)
+                                  //StreamBuilder<int>(
+                                  //stream: likeCountController.stream,
+                                  //initialData:
+                                  //    data.docs[index]['likes'].length,
+                                  // builder: (context, snapshot) {
+                                  // return Text(
+                                  //    '${data.docs[index]['likes'].length}',
+                                  //  );
+                                  // },
+                                  //),
                                   IconButton(
                                     onPressed: () {
                                       showDialog(
@@ -758,13 +762,13 @@ class _CroudsourcingPageState extends State<CroudsourcingPage> {
                   const SizedBox(
                     height: 20,
                   ),
-                  TextFieldWidget(
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                      ],
-                      inputType: TextInputType.number,
-                      label: 'No. days valid',
-                      controller: daysValidController),
+                  //TextFieldWidget(
+                  //inputFormatters: [
+                  //FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  //],
+                  //inputType: TextInputType.number,
+                  //label: 'No. days valid',
+                  ///controller: daysValidController),
                   const SizedBox(
                     height: 20,
                   ),
@@ -800,9 +804,30 @@ class _CroudsourcingPageState extends State<CroudsourcingPage> {
                       }
                     },
                     child: const TextWidget(
-                      text: 'Add Answer',
+                      text: 'Add Option',
                       fontSize: 14,
                     ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final selectedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(DateTime.now().year + 1),
+                      );
+
+                      if (selectedDate != null) {
+                        setState(() {
+                          selectedDateTime = selectedDate;
+                          expirationDate = Timestamp.fromDate(selectedDate);
+                        });
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: const Color.fromRGBO(180, 146, 129, 1),
+                    ),
+                    child: Text('Set Expiration Date'),
                   ),
                 ],
               ),
@@ -864,12 +889,12 @@ class _CroudsourcingPageState extends State<CroudsourcingPage> {
                   } else {
                     addUserActivity(activity: "Created a crowd sourcing entry");
                     addCrowdsourcing(
-                        idImageURL,
-                        nameController.text,
-                        descController.text,
-                        answers,
-                        context,
-                        daysValidController.text);
+                      idImageURL,
+                      nameController.text,
+                      descController.text,
+                      answers,
+                      expirationDate as Timestamp,
+                    );
                     Navigator.pop(context);
 
                     // Display the "Your crowdsource idea is being reviewed" pop-up
@@ -945,7 +970,7 @@ class PollOptionCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
       child: ListTile(
         title: Text(pollOption.text),
-        subtitle: Text('Votes: $numberOfVotes'), // Display the vote count
+        //subtitle: Text('Votes: $numberOfVotes'), // Display the vote count
         trailing: hasVotedForThisOption != null && hasVotedForThisOption!
             ? ElevatedButton(
                 onPressed: changeVotePressed,
