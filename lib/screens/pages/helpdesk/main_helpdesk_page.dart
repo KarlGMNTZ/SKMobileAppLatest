@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -295,7 +297,27 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
     "Health",
     "Education",
     "Financial",
+    "Requests",
+    "Others",
   ];
+
+  sendWebnotif() async {
+    try {
+      var res = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      if (res.exists) {
+        Map? userDetails = res.data();
+        var name = userDetails!['fname'] + " " + userDetails['lname'];
+        await FirebaseFirestore.instance.collection('webnotif').add({
+          "dateTime": Timestamp.now(),
+          "message": "$name created a help desk entry"
+        });
+      }
+    } catch (_) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -479,6 +501,7 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
                                 idFileFileUrl,
                                 titleController.text,
                                 concernDropdownValue);
+                            sendWebnotif();
 
                             // Navigate back to the main home screen
                             Navigator.of(context)

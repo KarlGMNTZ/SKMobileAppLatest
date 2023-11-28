@@ -274,440 +274,477 @@ class _CroudsourcingPageState extends State<CroudsourcingPage> {
   }
 
   final commentController = TextEditingController();
+  TextEditingController searchCrowdSourceController = TextEditingController();
+  Timer? _debounce;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(241, 241, 182, 152),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color.fromARGB(241, 241, 182, 152),
-        child: const Icon(Icons.add),
-        onPressed: () {
-          addCrowdsourcingDialog(context);
-        },
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('Crowdsourcing')
-            .where('isApprove', isEqualTo: true)
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) {
-            print(snapshot.error);
-            return const Center(child: Text('Error'));
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Padding(
-              padding: EdgeInsets.only(top: 50),
-              child: Center(
-                child: CircularProgressIndicator(
-                  color: Colors.black,
-                ),
-              ),
-            );
-          }
-
-          final data = snapshot.requireData;
-          final DateTime currentDate = DateTime.now();
-          final List<Widget> notExpiredCrowdsourcingWidgets = [];
-
-          for (int index = 0; index < data.docs.length; index++) {
-            Map<String, dynamic> documentData =
-                data.docs[index].data() as Map<String, dynamic>;
-
-            if (documentData.containsKey('expirationDate')) {
-              DateTime expirationDate = documentData['expirationDate'].toDate();
-              if (currentDate.isBefore(expirationDate)) {
-                notExpiredCrowdsourcingWidgets.add(
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: const Color.fromARGB(241, 241, 182, 152),
+      //   child: const Icon(Icons.add),
+      //   onPressed: () {
+      //     addCrowdsourcingDialog(context);
+      //   },
+      // ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: searchCrowdSourceController,
+              decoration: InputDecoration(
+                  hintText: 'Search Name',
+                  contentPadding: const EdgeInsets.all(20),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5))),
+              onChanged: (value) {
+                if (_debounce?.isActive ?? false) _debounce!.cancel();
+                _debounce = Timer(const Duration(milliseconds: 1500), () {
+                  setState(() {});
+                });
+              },
+            ),
+          ),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('Crowdsourcing')
+                  .where('isApprove', isEqualTo: true)
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  print(snapshot.error);
+                  return const Center(child: Text('Error'));
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Padding(
+                    padding: EdgeInsets.only(top: 50),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.black,
+                      ),
                     ),
-                    margin: const EdgeInsets.all(3.8),
-                    elevation: 4.0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showImageDialog(data.docs[index]['imageUrl']);
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            height: 250,
-                            margin: const EdgeInsets.symmetric(horizontal: 8),
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(30),
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  data.docs[index]['imageUrl'],
-                                ),
-                                fit: BoxFit.cover,
-                              ),
+                  );
+                }
+
+                final data = snapshot.requireData;
+                final DateTime currentDate = DateTime.now();
+                final List<Widget> notExpiredCrowdsourcingWidgets = [];
+
+                for (int index = 0; index < data.docs.length; index++) {
+                  Map<String, dynamic> documentData =
+                      data.docs[index].data() as Map<String, dynamic>;
+
+                  if (documentData['name']
+                      .toString()
+                      .toLowerCase()
+                      .toString()
+                      .contains(searchCrowdSourceController.text
+                          .toLowerCase()
+                          .toString())) {
+                    if (documentData.containsKey('expirationDate')) {
+                      DateTime expirationDate =
+                          documentData['expirationDate'].toDate();
+                      if (currentDate.isBefore(expirationDate)) {
+                        notExpiredCrowdsourcingWidgets.add(
+                          Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    data.docs[index]['name'],
-                                    style: const TextStyle(fontSize: 18.0),
+                            margin: const EdgeInsets.all(3.8),
+                            elevation: 4.0,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    showImageDialog(
+                                        data.docs[index]['imageUrl']);
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 250,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black,
+                                      borderRadius: BorderRadius.circular(30),
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                          data.docs[index]['imageUrl'],
+                                        ),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
                                   ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    'Posted on: ${DateFormat('yyyy-MM-dd HH:mm').format(data.docs[index]['dateTime'].toDate())}',
-                                    style: const TextStyle(
-                                        fontSize: 12.0, color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  //IconButton(
-                                  //onPressed: () {
-                                  //_toggleLike(index, data.docs[index]);
-                                  //},
-                                  // icon: Icon(
-                                  //  data.docs[index]['likes'].contains(
-                                  //           FirebaseAuth
-                                  //               .instance.currentUser!.uid)
-                                  //      ? Icons.favorite
-                                  //      : Icons.favorite_border,
-                                  //  color: Colors.red,
-                                  // ),
-                                  //),
-                                  //if (data.docs[index]['likes'].length > 0)
-                                  //StreamBuilder<int>(
-                                  //stream: likeCountController.stream,
-                                  //initialData:
-                                  //    data.docs[index]['likes'].length,
-                                  // builder: (context, snapshot) {
-                                  // return Text(
-                                  //    '${data.docs[index]['likes'].length}',
-                                  //  );
-                                  // },
-                                  //),
-                                  IconButton(
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return Dialog(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
-                                              child: StatefulBuilder(
-                                                builder: (context, setState) {
-                                                  return SizedBox(
-                                                    height: 500,
-                                                    child: Column(
-                                                      children: [
-                                                        Expanded(
-                                                          child: ListView
-                                                              .separated(
-                                                            separatorBuilder:
-                                                                (context,
-                                                                    index) {
-                                                              return const Divider();
-                                                            },
-                                                            itemCount: data
-                                                                .docs[index]
-                                                                    ['comments']
-                                                                .length,
-                                                            itemBuilder:
-                                                                (context,
-                                                                    index1) {
-                                                              return ListTile(
-                                                                leading:
-                                                                    CircleAvatar(
-                                                                  minRadius: 20,
-                                                                  maxRadius: 20,
-                                                                  backgroundImage:
-                                                                      NetworkImage(
-                                                                          userData[
-                                                                              'profile']),
-                                                                ),
-                                                                title:
-                                                                    TextWidget(
-                                                                  text: data.docs[
-                                                                              index]
-                                                                          [
-                                                                          'comments']
-                                                                      [
-                                                                      index1]['name'],
-                                                                  fontSize: 14,
-                                                                ),
-                                                                subtitle:
-                                                                    TextWidget(
-                                                                  text: data.docs[index]
-                                                                              [
-                                                                              'comments']
-                                                                          [
-                                                                          index1]
-                                                                      [
-                                                                      'comment'],
-                                                                  fontSize: 12,
-                                                                ),
-                                                              );
-                                                            },
-                                                          ),
-                                                        ),
-                                                        Align(
-                                                          alignment: Alignment
-                                                              .bottomCenter,
-                                                          child: TextFormField(
-                                                            controller:
-                                                                commentController,
-                                                            decoration:
-                                                                InputDecoration(
-                                                              filled: true,
-                                                              fillColor: Colors
-                                                                  .grey[300],
-                                                              suffixIcon:
-                                                                  StreamBuilder<
-                                                                      DocumentSnapshot>(
-                                                                stream: FirebaseFirestore
-                                                                    .instance
-                                                                    .collection(
-                                                                        'Users')
-                                                                    .doc(FirebaseAuth
-                                                                        .instance
-                                                                        .currentUser!
-                                                                        .uid)
-                                                                    .snapshots(),
-                                                                builder: (context,
-                                                                    AsyncSnapshot<
-                                                                            DocumentSnapshot>
-                                                                        snapshot) {
-                                                                  if (!snapshot
-                                                                      .hasData) {
-                                                                    return const SizedBox();
-                                                                  } else if (snapshot
-                                                                      .hasError) {
-                                                                    return const Center(
-                                                                        child: Text(
-                                                                            'Something went wrong'));
-                                                                  } else if (snapshot
-                                                                          .connectionState ==
-                                                                      ConnectionState
-                                                                          .waiting) {
-                                                                    return const SizedBox();
-                                                                  }
-                                                                  dynamic
-                                                                      data1 =
-                                                                      snapshot
-                                                                          .data;
-                                                                  return IconButton(
-                                                                    onPressed:
-                                                                        () async {
-                                                                      await FirebaseFirestore
-                                                                          .instance
-                                                                          .collection(
-                                                                              'Crowdsourcing')
-                                                                          .doc(data
-                                                                              .docs[index]
-                                                                              .id)
-                                                                          .update({
-                                                                        'comments':
-                                                                            FieldValue.arrayUnion([
-                                                                          {
-                                                                            'name':
-                                                                                data1['fname'],
-                                                                            'comment':
-                                                                                commentController.text,
-                                                                            'dateTime':
-                                                                                DateTime.now()
-                                                                          }
-                                                                        ])
-                                                                      });
-
-                                                                      Navigator.pop(
-                                                                          context);
-
-                                                                      commentController
-                                                                          .clear();
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            data.docs[index]['name'],
+                                            style:
+                                                const TextStyle(fontSize: 18.0),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            'Posted on: ${DateFormat('yyyy-MM-dd HH:mm').format(data.docs[index]['dateTime'].toDate())}',
+                                            style: const TextStyle(
+                                                fontSize: 12.0,
+                                                color: Colors.grey),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          //IconButton(
+                                          //onPressed: () {
+                                          //_toggleLike(index, data.docs[index]);
+                                          //},
+                                          // icon: Icon(
+                                          //  data.docs[index]['likes'].contains(
+                                          //           FirebaseAuth
+                                          //               .instance.currentUser!.uid)
+                                          //      ? Icons.favorite
+                                          //      : Icons.favorite_border,
+                                          //  color: Colors.red,
+                                          // ),
+                                          //),
+                                          //if (data.docs[index]['likes'].length > 0)
+                                          //StreamBuilder<int>(
+                                          //stream: likeCountController.stream,
+                                          //initialData:
+                                          //    data.docs[index]['likes'].length,
+                                          // builder: (context, snapshot) {
+                                          // return Text(
+                                          //    '${data.docs[index]['likes'].length}',
+                                          //  );
+                                          // },
+                                          //),
+                                          IconButton(
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return Dialog(
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              10.0),
+                                                      child: StatefulBuilder(
+                                                        builder: (context,
+                                                            setState) {
+                                                          return SizedBox(
+                                                            height: 500,
+                                                            child: Column(
+                                                              children: [
+                                                                Expanded(
+                                                                  child: ListView
+                                                                      .separated(
+                                                                    separatorBuilder:
+                                                                        (context,
+                                                                            index) {
+                                                                      return const Divider();
                                                                     },
-                                                                    icon:
-                                                                        const Icon(
-                                                                      Icons
-                                                                          .send,
+                                                                    itemCount: data
+                                                                        .docs[
+                                                                            index]
+                                                                            [
+                                                                            'comments']
+                                                                        .length,
+                                                                    itemBuilder:
+                                                                        (context,
+                                                                            index1) {
+                                                                      return ListTile(
+                                                                        leading:
+                                                                            CircleAvatar(
+                                                                          minRadius:
+                                                                              20,
+                                                                          maxRadius:
+                                                                              20,
+                                                                          backgroundImage:
+                                                                              NetworkImage(userData['profile']),
+                                                                        ),
+                                                                        title:
+                                                                            TextWidget(
+                                                                          text: data.docs[index]['comments'][index1]
+                                                                              [
+                                                                              'name'],
+                                                                          fontSize:
+                                                                              14,
+                                                                        ),
+                                                                        subtitle:
+                                                                            TextWidget(
+                                                                          text: data.docs[index]['comments'][index1]
+                                                                              [
+                                                                              'comment'],
+                                                                          fontSize:
+                                                                              12,
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                  ),
+                                                                ),
+                                                                Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .bottomCenter,
+                                                                  child:
+                                                                      TextFormField(
+                                                                    controller:
+                                                                        commentController,
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      filled:
+                                                                          true,
+                                                                      fillColor:
+                                                                          Colors
+                                                                              .grey[300],
+                                                                      suffixIcon:
+                                                                          StreamBuilder<
+                                                                              DocumentSnapshot>(
+                                                                        stream: FirebaseFirestore
+                                                                            .instance
+                                                                            .collection('Users')
+                                                                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                                                                            .snapshots(),
+                                                                        builder:
+                                                                            (context,
+                                                                                AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                                                          if (!snapshot
+                                                                              .hasData) {
+                                                                            return const SizedBox();
+                                                                          } else if (snapshot
+                                                                              .hasError) {
+                                                                            return const Center(child: Text('Something went wrong'));
+                                                                          } else if (snapshot.connectionState ==
+                                                                              ConnectionState.waiting) {
+                                                                            return const SizedBox();
+                                                                          }
+                                                                          dynamic
+                                                                              data1 =
+                                                                              snapshot.data;
+                                                                          return IconButton(
+                                                                            onPressed:
+                                                                                () async {
+                                                                              await FirebaseFirestore.instance.collection('Crowdsourcing').doc(data.docs[index].id).update({
+                                                                                'comments': FieldValue.arrayUnion([
+                                                                                  {
+                                                                                    'name': data1['fname'],
+                                                                                    'comment': commentController.text,
+                                                                                    'dateTime': DateTime.now()
+                                                                                  }
+                                                                                ])
+                                                                              });
+
+                                                                              Navigator.pop(context);
+
+                                                                              commentController.clear();
+                                                                            },
+                                                                            icon:
+                                                                                const Icon(
+                                                                              Icons.send,
+                                                                            ),
+                                                                          );
+                                                                        },
+                                                                      ),
                                                                     ),
-                                                                  );
-                                                                },
-                                                              ),
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
-                                                          ),
-                                                        ),
-                                                      ],
+                                                          );
+                                                        },
+                                                      ),
                                                     ),
                                                   );
                                                 },
-                                              ),
+                                              );
+                                            },
+                                            icon: const Icon(
+                                              Icons.comment,
                                             ),
+                                          ),
+                                          box.read('role') == 'Admin'
+                                              ? IconButton(
+                                                  onPressed: () async {
+                                                    await FirebaseFirestore
+                                                        .instance
+                                                        .collection(
+                                                            'Crowdsourcing')
+                                                        .doc(
+                                                            data.docs[index].id)
+                                                        .delete();
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.delete,
+                                                  ),
+                                                )
+                                              : const SizedBox(),
+                                        ],
+                                      ),
+                                      Text(
+                                        data.docs[index]['description'],
+                                        style: const TextStyle(fontSize: 12.0),
+                                      ),
+                                      const SizedBox(height: 20.0),
+                                      ListView.builder(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount:
+                                            data.docs[index]['options'].length,
+                                        itemBuilder: (context, index1) {
+                                          return PollOptionCard(
+                                            description: data.docs[index]
+                                                    ['options'][index1]
+                                                ['description'],
+                                            changeVotePressed: () async {
+                                              addUserActivity(
+                                                  activity:
+                                                      "Voted in the crowd source ${data.docs[index]['name']}");
+                                              _voteForOption(index, index1,
+                                                  data.docs[index]);
+                                              await FirebaseFirestore.instance
+                                                  .collection('Crowdsourcing')
+                                                  .doc(data.docs[index].id)
+                                                  .update({
+                                                data.docs[index]['options']
+                                                    [index1]['votes1']: [
+                                                  ...data.docs[index]['options']
+                                                      [index1]['votes1'],
+                                                  FirebaseAuth.instance
+                                                      .currentUser!.uid,
+                                                ],
+                                              });
+                                            },
+                                            hasVotedForThisOption: data
+                                                .docs[index]['options'][index1]
+                                                    ['votes1']
+                                                .contains(FirebaseAuth
+                                                    .instance.currentUser!.uid),
+                                            pollOption: PollOption(
+                                              text: data.docs[index]['options']
+                                                  [index1]['text'],
+                                              votes1: [],
+                                            ),
+                                            onPressed: () async {
+                                              bool isExist = false;
+                                              for (var i = 0;
+                                                  i <
+                                                      data
+                                                          .docs[index]
+                                                              ['options']
+                                                          .length;
+                                                  i++) {
+                                                for (var x = 0;
+                                                    x <
+                                                        data
+                                                            .docs[index]
+                                                                ['options'][i]
+                                                                ['votes1']
+                                                            .length;
+                                                    x++) {
+                                                  if (data.docs[index]
+                                                              ['options'][i]
+                                                          ['votes1'][x] ==
+                                                      FirebaseAuth.instance
+                                                          .currentUser!.uid) {
+                                                    isExist = true;
+                                                  }
+                                                }
+                                              }
+
+                                              if (isExist == false) {
+                                                addUserActivity(
+                                                    activity:
+                                                        "Voted in the crowd source ${data.docs[index]['name']}");
+                                                _voteForOption(index, index1,
+                                                    data.docs[index]);
+                                                await FirebaseFirestore.instance
+                                                    .collection('Crowdsourcing')
+                                                    .doc(data.docs[index].id)
+                                                    .update({
+                                                  data.docs[index]['options']
+                                                      [index1]['votes1']: [
+                                                    ...data.docs[index]
+                                                            ['options'][index1]
+                                                        ['votes1'],
+                                                    FirebaseAuth.instance
+                                                        .currentUser!.uid,
+                                                  ],
+                                                });
+                                              } else {
+                                                showToast(
+                                                    "Please remove your existing vote. Thank you");
+                                              }
+                                            },
                                           );
                                         },
-                                      );
-                                    },
-                                    icon: const Icon(
-                                      Icons.comment,
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                  box.read('role') == 'Admin'
-                                      ? IconButton(
-                                          onPressed: () async {
-                                            await FirebaseFirestore.instance
-                                                .collection('Crowdsourcing')
-                                                .doc(data.docs[index].id)
-                                                .delete();
-                                          },
-                                          icon: const Icon(
-                                            Icons.delete,
-                                          ),
-                                        )
-                                      : const SizedBox(),
-                                ],
-                              ),
-                              Text(
-                                data.docs[index]['description'],
-                                style: const TextStyle(fontSize: 12.0),
-                              ),
-                              const SizedBox(height: 20.0),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: data.docs[index]['options'].length,
-                                itemBuilder: (context, index1) {
-                                  return PollOptionCard(
-                                    changeVotePressed: () async {
-                                      addUserActivity(
-                                          activity:
-                                              "Voted in the crowd source ${data.docs[index]['name']}");
-                                      _voteForOption(
-                                          index, index1, data.docs[index]);
-                                      await FirebaseFirestore.instance
-                                          .collection('Crowdsourcing')
-                                          .doc(data.docs[index].id)
-                                          .update({
-                                        data.docs[index]['options'][index1]
-                                            ['votes1']: [
-                                          ...data.docs[index]['options'][index1]
-                                              ['votes1'],
-                                          FirebaseAuth
-                                              .instance.currentUser!.uid,
-                                        ],
-                                      });
-                                    },
-                                    hasVotedForThisOption: data.docs[index]
-                                            ['options'][index1]['votes1']
-                                        .contains(FirebaseAuth
-                                            .instance.currentUser!.uid),
-                                    pollOption: PollOption(
-                                      text: data.docs[index]['options'][index1]
-                                          ['text'],
-                                      votes1: [],
-                                    ),
-                                    onPressed: () async {
-                                      bool isExist = false;
-                                      for (var i = 0;
-                                          i <
-                                              data.docs[index]['options']
-                                                  .length;
-                                          i++) {
-                                        for (var x = 0;
-                                            x <
-                                                data
-                                                    .docs[index]['options'][i]
-                                                        ['votes1']
-                                                    .length;
-                                            x++) {
-                                          if (data.docs[index]['options'][i]
-                                                  ['votes1'][x] ==
-                                              FirebaseAuth
-                                                  .instance.currentUser!.uid) {
-                                            isExist = true;
-                                          }
-                                        }
-                                      }
-
-                                      if (isExist == false) {
-                                        addUserActivity(
-                                            activity:
-                                                "Voted in the crowd source ${data.docs[index]['name']}");
-                                        _voteForOption(
-                                            index, index1, data.docs[index]);
-                                        await FirebaseFirestore.instance
-                                            .collection('Crowdsourcing')
-                                            .doc(data.docs[index].id)
-                                            .update({
-                                          data.docs[index]['options'][index1]
-                                              ['votes1']: [
-                                            ...data.docs[index]['options']
-                                                [index1]['votes1'],
-                                            FirebaseAuth
-                                                .instance.currentUser!.uid,
-                                          ],
-                                        });
-                                      } else {
-                                        showToast(
-                                            "Please remove your existing vote. Thank you");
-                                      }
-                                    },
-                                  );
-                                },
-                              ),
-                            ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }
-            }
-          }
+                        );
+                      }
+                    }
+                  }
+                }
 
-          if (notExpiredCrowdsourcingWidgets.isNotEmpty) {
-            return ListView.separated(
-              itemCount: notExpiredCrowdsourcingWidgets.length,
-              separatorBuilder: (context, index) {
-                return const Divider();
+                if (notExpiredCrowdsourcingWidgets.isNotEmpty) {
+                  return ListView.separated(
+                    itemCount: notExpiredCrowdsourcingWidgets.length,
+                    separatorBuilder: (context, index) {
+                      return const Divider();
+                    },
+                    itemBuilder: (context, index) {
+                      return notExpiredCrowdsourcingWidgets[index];
+                    },
+                  );
+                } else {
+                  // If there are no not expired crowdsourcing items, show the message
+                  return const Center(
+                    child: Text(
+                      'No crowdsourcing available.',
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                  );
+                }
               },
-              itemBuilder: (context, index) {
-                return notExpiredCrowdsourcingWidgets[index];
-              },
-            );
-          } else {
-            // If there are no not expired crowdsourcing items, show the message
-            return const Center(
-              child: Text(
-                'No crowdsourcing available.',
-                style: TextStyle(fontSize: 16.0),
-              ),
-            );
-          }
-        },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -825,9 +862,9 @@ class _CroudsourcingPageState extends State<CroudsourcingPage> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: const Color.fromRGBO(180, 146, 129, 1),
+                      backgroundColor: const Color.fromRGBO(180, 146, 129, 1),
                     ),
-                    child: Text('Set Expiration Date'),
+                    child: const Text('Set Expiration Date'),
                   ),
                 ],
               ),
@@ -950,6 +987,7 @@ class PollOptionCard extends StatelessWidget {
   final VoidCallback onPressed;
   final VoidCallback changeVotePressed;
   final bool? hasVotedForThisOption;
+  final String description;
 
   const PollOptionCard({
     super.key,
@@ -957,6 +995,7 @@ class PollOptionCard extends StatelessWidget {
     required this.onPressed,
     required this.changeVotePressed,
     required this.hasVotedForThisOption,
+    required this.description,
   });
 
   @override
@@ -969,7 +1008,43 @@ class PollOptionCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
       child: ListTile(
-        title: Text(pollOption.text),
+        title: Row(
+          children: [
+            Text(pollOption.text),
+            const SizedBox(
+              width: 10,
+            ),
+            InkWell(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Okay"))
+                          ],
+                          title: const TextWidget(
+                            text: "Option Description",
+                            fontSize: 15,
+                            isBold: true,
+                          ),
+                          content: Text(
+                            description,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 13,
+                            ),
+                          ),
+                        );
+                      });
+                },
+                child: const Icon(Icons.info))
+          ],
+        ),
         //subtitle: Text('Votes: $numberOfVotes'), // Display the vote count
         trailing: hasVotedForThisOption != null && hasVotedForThisOption!
             ? ElevatedButton(

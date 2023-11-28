@@ -19,6 +19,11 @@ Future<void> signup(
   voter,
   profile,
   residency,
+  familyStatus,
+  familyIncome,
+  areasInterestedIn,
+  isPWD,
+  disability,
 ) async {
   final docUser = FirebaseFirestore.instance
       .collection('Users')
@@ -46,6 +51,11 @@ Future<void> signup(
     'profile': profile,
     'residency': residency,
     'dateTime': DateTime.now().toIso8601String(),
+    'familyStatus': familyStatus,
+    'familyIncome': familyIncome,
+    'areasInterestedIn': areasInterestedIn,
+    'isPWD': isPWD,
+    'disability': disability,
   };
 
   await docUser.set(json);

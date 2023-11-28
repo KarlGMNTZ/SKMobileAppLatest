@@ -20,28 +20,28 @@ class _TabbarViewState extends State<TabbarView> {
       icon: Icon(Icons.list),
       text: "Results",
     ),
-    Tab(
-      icon: Icon(Icons.badge),
-      text: "Status",
-    ),
+    // Tab(
+    //   icon: Icon(Icons.badge),
+    //   text: "Status",
+    // ),
   ]);
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: const Text("Crowd Sourcing"),
-          backgroundColor: Color.fromARGB(255, 0, 0, 0),
+          backgroundColor: const Color.fromARGB(255, 0, 0, 0),
           bottom: upperTab,
         ),
         body: const TabBarView(
           children: [
             CroudsourcingPage(),
             CrowSourcingDetailsPage(),
-            CrowSourcingStatusPage(),
+            // CrowSourcingStatusPage(),
           ],
         ),
       ),

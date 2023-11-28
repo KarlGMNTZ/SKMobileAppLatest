@@ -251,6 +251,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final birthdateController = TextEditingController();
   final addressController = TextEditingController();
   final contactNumberController = TextEditingController();
+  final disabilityController = TextEditingController();
 
   String selectedPurok = 'Purok 1';
   // Store the selected purok
@@ -317,12 +318,33 @@ class _SignupScreenState extends State<SignupScreen> {
     'No',
   ];
 
+  String selectedFamilyStatus = 'Parents are living together';
+  // Store the selected voter
+  List<String> familyStatusOption = [
+    'Parents are living together',
+    'Both parents are separated',
+    'Only monther/father is with you',
+  ];
+
+  String selectedFamilyIncome = 'Less than 10,000';
+  // Store the selected voter
+  List<String> familyIncomeOption = [
+    'Less than 10,000',
+    '20,000 to 30,000',
+    '30,000 to 50,000',
+    '50,000 to 75,000',
+    '75,000 and above',
+  ];
+
   String selectedSex = 'Male';
   // Store the selected voter
   List<String> sexOptions = [
     'Male',
     'Female',
   ];
+
+  String radioButtonGroupValue = '';
+  String radioPWDButtonGroupValue = '';
 
   @override
   Widget build(BuildContext context) {
@@ -339,7 +361,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       height: 225,
                       width: medQuery.width,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [
                             Color.fromARGB(255, 175, 87, 40),
                             Color.fromARGB(255, 221, 145, 69),
@@ -352,7 +374,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             color: Colors.black.withOpacity(0.2),
                             blurRadius: 10.0,
                             spreadRadius: 2.0,
-                            offset: Offset(0, 5),
+                            offset: const Offset(0, 5),
                           ),
                         ],
                       ),
@@ -501,6 +523,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DropdownButton<String>(
+                    padding: const EdgeInsets.only(right: 10),
+                    isExpanded: true,
                     underline: const SizedBox(),
                     value: selectedSex,
                     onChanged: (newValue6) {
@@ -673,6 +697,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DropdownButton<String>(
+                    padding: const EdgeInsets.only(right: 10),
+                    isExpanded: true,
                     underline: const SizedBox(),
                     value: selectedPurok,
                     onChanged: (newValue) {
@@ -736,6 +762,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DropdownButton<String>(
+                    padding: const EdgeInsets.only(right: 10),
+                    isExpanded: true,
                     underline: const SizedBox(),
                     value: selectedCivil,
                     onChanged: (newValue1) {
@@ -799,6 +827,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DropdownButton<String>(
+                    padding: const EdgeInsets.only(right: 10),
+                    isExpanded: true,
                     underline: const SizedBox(),
                     value: selectedYouth,
                     onChanged: (newValue2) {
@@ -862,6 +892,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DropdownButton<String>(
+                    padding: const EdgeInsets.only(right: 10),
+                    isExpanded: true,
                     underline: const SizedBox(),
                     value: selectedSchool,
                     onChanged: (newValue3) {
@@ -925,6 +957,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DropdownButton<String>(
+                    padding: const EdgeInsets.only(right: 10),
+                    isExpanded: true,
                     underline: const SizedBox(),
                     value: selectedWork,
                     onChanged: (newValue4) {
@@ -988,6 +1022,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DropdownButton<String>(
+                    padding: const EdgeInsets.only(right: 10),
+                    isExpanded: true,
                     underline: const SizedBox(),
                     value: selectedVoter,
                     onChanged: (newValue5) {
@@ -1009,6 +1045,292 @@ class _SignupScreenState extends State<SignupScreen> {
                       );
                     }).toList(),
                   ),
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RichText(
+                  text: const TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Family Status',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Bold',
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextSpan(
+                        text: '*',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Bold',
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Container(
+                  width: 325,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DropdownButton<String>(
+                    padding: const EdgeInsets.only(right: 10),
+                    isExpanded: true,
+                    underline: const SizedBox(),
+                    value: selectedFamilyStatus,
+                    onChanged: (newValue5) {
+                      setState(() {
+                        selectedFamilyStatus = newValue5!;
+                      });
+                    },
+                    items: familyStatusOption
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: TextWidget(
+                            text: value,
+                            fontSize: 16,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RichText(
+                  text: const TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Family Income',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Bold',
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextSpan(
+                        text: '*',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: 'Bold',
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Container(
+                  width: 325,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    padding: const EdgeInsets.only(right: 10),
+                    underline: const SizedBox(),
+                    value: selectedFamilyIncome,
+                    onChanged: (newValue5) {
+                      setState(() {
+                        selectedFamilyIncome = newValue5!;
+                      });
+                    },
+                    items: familyIncomeOption
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: TextWidget(
+                            text: value,
+                            fontSize: 16,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            const SizedBox(
+              child: Text(
+                'Are you a Person with Disabilities?',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Bold',
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Radio(
+                    value: "Yes",
+                    groupValue: radioPWDButtonGroupValue,
+                    onChanged: (value) {
+                      setState(() {
+                        radioPWDButtonGroupValue = value!;
+                      });
+                    }),
+                const Text("Yes"),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.15,
+                ),
+                Radio(
+                    value: "No",
+                    groupValue: radioPWDButtonGroupValue,
+                    onChanged: (value) {
+                      setState(() {
+                        radioPWDButtonGroupValue = value!;
+                      });
+                    }),
+                const Text("No"),
+              ],
+            ),
+            radioPWDButtonGroupValue == "No"
+                ? const SizedBox()
+                : TextFieldWidget(
+                    label: 'Specify Illness/Disabilities',
+                    hint: 'Illness/Disabilities',
+                    controller: disabilityController,
+                    inputType:
+                        TextInputType.text, // Set the input type for email
+
+                    // Add any other properties or customization you need
+                  ),
+            const SizedBox(
+              height: 20,
+            ),
+            const SizedBox(
+              child: Text(
+                'Areas you are Interested in',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Bold',
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              children: [
+                Radio(
+                    value: "Health",
+                    groupValue: radioButtonGroupValue,
+                    onChanged: (value) {
+                      setState(() {
+                        radioButtonGroupValue = value!;
+                      });
+                    }),
+                const Text("Health"),
+                Radio(
+                    value: "Education",
+                    groupValue: radioButtonGroupValue,
+                    onChanged: (value) {
+                      setState(() {
+                        radioButtonGroupValue = value!;
+                      });
+                    }),
+                const Text("Education"),
+                Radio(
+                    value: "Security",
+                    groupValue: radioButtonGroupValue,
+                    onChanged: (value) {
+                      setState(() {
+                        radioButtonGroupValue = value!;
+                      });
+                    }),
+                const Text("Security")
+              ],
+            ),
+            Row(
+              children: [
+                Radio(
+                    value: "Governance",
+                    groupValue: radioButtonGroupValue,
+                    onChanged: (value) {
+                      setState(() {
+                        radioButtonGroupValue = value!;
+                      });
+                    }),
+                const Text("Governance"),
+                Radio(
+                    value: "Citizenship",
+                    groupValue: radioButtonGroupValue,
+                    onChanged: (value) {
+                      setState(() {
+                        radioButtonGroupValue = value!;
+                      });
+                    }),
+                const Text("Citizenship"),
+                Radio(
+                    value: "Sports",
+                    groupValue: radioButtonGroupValue,
+                    onChanged: (value) {
+                      setState(() {
+                        radioButtonGroupValue = value!;
+                      });
+                    }),
+                const Text("Sports")
+              ],
+            ),
+            Row(
+              children: [
+                Radio(
+                    value: "Economic Empowerment",
+                    groupValue: radioButtonGroupValue,
+                    onChanged: (value) {
+                      setState(() {
+                        radioButtonGroupValue = value!;
+                      });
+                    }),
+                const Text(
+                  "Economic Empowerment",
+                ),
+                Radio(
+                    value: "Social Inclusion",
+                    groupValue: radioButtonGroupValue,
+                    onChanged: (value) {
+                      setState(() {
+                        radioButtonGroupValue = value!;
+                      });
+                    }),
+                const Text(
+                  "Social Inclusion",
                 ),
               ],
             ),
@@ -1070,7 +1392,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 }
               },
             ),
-            if (loading) CircularProgressIndicator(),
+            if (loading) const CircularProgressIndicator(),
             const SizedBox(
               height: 20,
             ),
@@ -1141,6 +1463,11 @@ class _SignupScreenState extends State<SignupScreen> {
       print("School: $selectedSchool");
       print("Work: $selectedWork");
       print("Voter: $selectedVoter");
+      print("Family Status: $selectedFamilyStatus");
+      print("Family Income: $selectedFamilyIncome");
+      print("Areas interested in: $radioButtonGroupValue");
+      print("is PWD: $radioPWDButtonGroupValue");
+      print("Illness/Disability detail: $disabilityController");
 
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
@@ -1148,24 +1475,28 @@ class _SignupScreenState extends State<SignupScreen> {
       int age = calculateAge(birthdate);
 
       signup(
-        fnameController.text,
-        mnameController.text,
-        lnameController.text,
-        selectedSex,
-        age,
-        birthdate,
-        emailController.text,
-        contactNumberController.text,
-        addressController.text,
-        selectedPurok,
-        selectedCivil,
-        selectedYouth,
-        selectedSchool,
-        selectedWork,
-        selectedVoter,
-        imageURL,
-        fileUrl,
-      );
+          fnameController.text,
+          mnameController.text,
+          lnameController.text,
+          selectedSex,
+          age,
+          birthdate,
+          emailController.text,
+          contactNumberController.text,
+          addressController.text,
+          selectedPurok,
+          selectedCivil,
+          selectedYouth,
+          selectedSchool,
+          selectedWork,
+          selectedVoter,
+          imageURL,
+          fileUrl,
+          selectedFamilyStatus,
+          selectedFamilyIncome,
+          radioButtonGroupValue,
+          radioPWDButtonGroupValue,
+          disabilityController.text);
 
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);

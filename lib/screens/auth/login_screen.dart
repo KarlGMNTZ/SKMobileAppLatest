@@ -33,7 +33,7 @@ class LoginScreen extends StatelessWidget {
                       height: 225,
                       width: medQuery.width,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [
                             Color.fromARGB(255, 175, 87, 40),
                             Color.fromARGB(255, 221, 145, 69),
@@ -46,7 +46,7 @@ class LoginScreen extends StatelessWidget {
                             color: Colors.black.withOpacity(0.2),
                             blurRadius: 10.0,
                             spreadRadius: 2.0,
-                            offset: Offset(0, 5),
+                            offset: const Offset(0, 5),
                           ),
                         ],
                       ),
@@ -59,8 +59,8 @@ class LoginScreen extends StatelessWidget {
                     child: Container(
                       height: 180,
                       width: 180,
-                      decoration: BoxDecoration(
-                          image: const DecorationImage(
+                      decoration: const BoxDecoration(
+                          image: DecorationImage(
                               image: AssetImage('assets/images/logo.png'),
                               fit: BoxFit.fitWidth)),
                     ),
@@ -111,7 +111,8 @@ class LoginScreen extends StatelessWidget {
               onPressed: () {
                 login(context);
               },
-              color: Color.fromARGB(255, 210, 123, 75), // Light beige color
+              color:
+                  const Color.fromARGB(255, 210, 123, 75), // Light beige color
             ),
             const SizedBox(
               height: 10,

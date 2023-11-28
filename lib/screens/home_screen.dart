@@ -35,6 +35,7 @@ import 'package:sk_app/widgets/text_widget.dart';
 import 'package:sk_app/widgets/textfield_widget.dart';
 import '../main.dart';
 import '../widgets/instruction_dialog.dart';
+import 'pages/ideas_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -258,12 +259,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ? Scaffold(
             appBar: _currentIndex == 0
                 ? PreferredSize(
-                    preferredSize: Size.fromHeight(80.0),
+                    preferredSize: const Size.fromHeight(80.0),
                     child: AppBar(
                       primary: true,
-                      backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                      backgroundColor: const Color.fromARGB(255, 0, 0, 0),
                       title: Padding(
-                        padding: EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                             top: 30.0), // Adjust the top padding as needed
                         child: Text(
                           'Welcome to SK App!',
@@ -276,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontSize:
                                         18, // Adjust the font size as needed
                                   ) ??
-                              TextStyle(
+                              const TextStyle(
                                 fontWeight: FontWeight.w300,
                                 color: Colors.white,
                                 fontSize: 18, // Adjust the font size as needed
@@ -285,7 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       actions: [
                         Padding(
-                          padding: EdgeInsets.only(top: 20.0),
+                          padding: const EdgeInsets.only(top: 20.0),
                           child: IconButton(
                             onPressed: () {
                               showDialog(
@@ -313,7 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             },
                             icon: Padding(
-                              padding: EdgeInsets.only(top: 2.0),
+                              padding: const EdgeInsets.only(top: 2.0),
                               child: Badge(
                                 label: TextWidget(
                                   text: badgeCount.toString(),
@@ -331,7 +332,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         Padding(
-                          padding: EdgeInsets.only(top: 20.0),
+                          padding: const EdgeInsets.only(top: 20.0),
                           child: IconButton(
                             onPressed: () {
                               showDialog(
@@ -763,7 +764,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               contentPadding: const EdgeInsets.all(16.0),
                               title: Text(
                                 data.docs[index]['name'],
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 18,
                                   color: Colors.black,
                                   fontFamily: 'Bold',
@@ -836,11 +837,11 @@ class _HomeScreenState extends State<HomeScreen> {
           appBar: AppBar(
             toolbarHeight: 80.0,
             backgroundColor: Colors.black,
-            title: Text('Forms and Concerns'),
+            title: const Text('Forms and Concerns'),
             centerTitle: true, // Set the title as needed
             // Add any other app bar configuration you need
           ),
-          backgroundColor: Color.fromRGBO(245, 199, 177, 100),
+          backgroundColor: const Color.fromRGBO(245, 199, 177, 100),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -858,6 +859,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   'Help Desk',
                   'https://cdn-icons-png.flaticon.com/512/5639/5639690.png?ga=GA1.1.472911080.1695727240',
                   const MainHelpdeskScreen(),
+                ),
+              ),
+              Expanded(
+                child: _buildGridTile(
+                  context,
+                  'Ideas',
+                  'https://cdn-icons-png.flaticon.com/512/10266/10266602.png',
+                  const IdeasPages(),
                 ),
               ),
               // ... other grid tiles
@@ -934,7 +943,7 @@ class _HomeScreenState extends State<HomeScreen> {
         icon,
         color: _currentIndex == index
             ? Colors.black
-            : Color.fromARGB(239, 235, 158, 120),
+            : const Color.fromARGB(239, 235, 158, 120),
         size: 30,
       ),
       label: '',
