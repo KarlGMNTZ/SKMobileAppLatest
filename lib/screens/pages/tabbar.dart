@@ -33,7 +33,7 @@ class _TabbarViewState extends State<TabbarView> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text("Crowd Sourcing"),
+          title: const Text("Polls"),
           backgroundColor: const Color.fromARGB(255, 0, 0, 0),
           bottom: upperTab,
         ),

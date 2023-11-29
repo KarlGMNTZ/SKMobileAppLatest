@@ -131,6 +131,9 @@ class _ActivitiesJoinedState extends State<ActivitiesJoined> {
                                                 fontFamily: "Regular",
                                                 fontSize: 20,
                                               ),
+                                              maxLines:
+                                                  1, // Set the maximum number of lines before truncating
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                             SizedBox(height: 10),
                                             Text(

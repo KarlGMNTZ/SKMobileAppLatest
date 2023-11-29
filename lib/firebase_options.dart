@@ -17,24 +17,15 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -52,11 +43,38 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions android = FirebaseOptions(
+  static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyCRQvDJ2MT7GCd3achOLXNHd7_k1hrzcYA',
     appId: '1:549984970718:web:b0840423af44764036df4f',
     messagingSenderId: '549984970718',
     projectId: 'sk-app-56284',
+    authDomain: 'sk-app-56284.firebaseapp.com',
     storageBucket: 'sk-app-56284.appspot.com',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyCLRaQd2Xh6TP39fhHeC6c_fcLhAUo-xsU',
+    appId: '1:549984970718:android:6be080020d294ab036df4f',
+    messagingSenderId: '549984970718',
+    projectId: 'sk-app-56284',
+    storageBucket: 'sk-app-56284.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyBVhObLkbFecLpXNToxqos1zzG8lRn4Pgs',
+    appId: '1:549984970718:ios:709323910f418e6136df4f',
+    messagingSenderId: '549984970718',
+    projectId: 'sk-app-56284',
+    storageBucket: 'sk-app-56284.appspot.com',
+    iosBundleId: 'com.example.skApp',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBVhObLkbFecLpXNToxqos1zzG8lRn4Pgs',
+    appId: '1:549984970718:ios:397c86ee7316b53e36df4f',
+    messagingSenderId: '549984970718',
+    projectId: 'sk-app-56284',
+    storageBucket: 'sk-app-56284.appspot.com',
+    iosBundleId: 'com.example.skApp.RunnerTests',
   );
 }

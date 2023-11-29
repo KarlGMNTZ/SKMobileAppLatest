@@ -44,7 +44,7 @@ class _IdeasPagesState extends State<IdeasPages> {
       appBar: AppBar(
         toolbarHeight: 80.0,
         backgroundColor: Colors.black,
-        title: const Text('Topic'),
+        title: const Text('Campaign List'),
         centerTitle: true, // Set the title as needed
         // Add any other app bar configuration you need
       ),
@@ -79,11 +79,13 @@ class _IdeasPagesState extends State<IdeasPages> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          TextWidget(
-                            text: topicsList[index]['topicName'],
-                            fontSize: 15,
-                            isBold: true,
-                            color: Colors.white,
+                          Expanded(
+                            child: TextWidget(
+                              text: topicsList[index]['topicName'],
+                              fontSize: 15,
+                              isBold: true,
+                              color: Colors.white,
+                            ),
                           ),
                           const Icon(Icons.arrow_forward_ios)
                         ],

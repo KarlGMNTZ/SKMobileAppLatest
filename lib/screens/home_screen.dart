@@ -856,7 +856,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: _buildGridTile(
                   context,
-                  'Help Desk',
+                  'Concerns',
                   'https://cdn-icons-png.flaticon.com/512/5639/5639690.png?ga=GA1.1.472911080.1695727240',
                   const MainHelpdeskScreen(),
                 ),
@@ -864,7 +864,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: _buildGridTile(
                   context,
-                  'Ideas',
+                  'Crowdsource Campaigns',
                   'https://cdn-icons-png.flaticon.com/512/10266/10266602.png',
                   const IdeasPages(),
                 ),

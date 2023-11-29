@@ -115,7 +115,7 @@ class _CreateIdeasPagesState extends State<CreateIdeasPages> {
       appBar: AppBar(
         toolbarHeight: 80.0,
         backgroundColor: Colors.black,
-        title: const Text('Ideas'),
+        title: const Text('Campaign'),
         centerTitle: true, // Set the title as needed
         // Add any other app bar configuration you need
       ),
@@ -176,7 +176,7 @@ class _CreateIdeasPagesState extends State<CreateIdeasPages> {
                                 left: MediaQuery.of(context).size.width * 0.03,
                               ),
                               border: InputBorder.none,
-                              hintText: "Enter title"),
+                              hintText: "Give us a title for your idea"),
                         ),
                       ),
                       SizedBox(

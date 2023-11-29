@@ -1339,7 +1339,7 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             ButtonWidget(
               fontSize: 14,
-              label: 'Upload proof of residency',
+              label: 'Upload Files',
               onPressed: () async {
                 try {
                   setState(() {

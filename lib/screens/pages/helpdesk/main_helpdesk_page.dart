@@ -325,7 +325,7 @@ class _MainHelpdeskScreenState extends State<MainHelpdeskScreen> {
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(245, 199, 177, 100),
         title: const TextWidget(
-          text: 'Help Desk',
+          text: 'Concerns',
           fontSize: 18,
           color: Colors.white,
           fontFamily: 'Bold',
